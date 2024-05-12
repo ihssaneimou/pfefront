@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "./fsac.png"
 
 const Navbar = () => {
   return (
@@ -31,7 +32,9 @@ const Navbar = () => {
           </svg>
         </label>
 
-        <a className="btn btn-ghost text-xl">univh2c fsac</a>
+        <a href="/home" className="logo-link cursor-pointer ml-16"> 
+          <img src={logo} alt="Logo" className="logo w-1/4" /> 
+        </a>
       </div>
       <div className="flex-none gap-2">
         <button className="btn btn-ghost btn-circle">

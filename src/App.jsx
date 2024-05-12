@@ -5,6 +5,8 @@ import Verification from "./pages/verification";
 import Session from "./pages/session";
 import Listeetudiant from "./pages/listeetudiant";
 import Listesurveillants from "./pages/listesurveillants";
+import Test from "./pages/test";
+import Repartitions from "./pages/repartitions";
 
 function App() {
   return (
@@ -15,10 +17,9 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/session" element={<Session />} />
         <Route path="/session/listeetudiant" element={<Listeetudiant />} />
-        <Route
-          path="/session/listesurveillant"
-          element={<Listesurveillants />}
-        />
+        <Route path="/session/listesurveillant" element={<Listesurveillants />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/repartitions" element={<Repartitions />} />
       </Routes>
     </BrowserRouter>
   );
