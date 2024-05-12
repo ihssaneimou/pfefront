@@ -3,12 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 const Repartitions = () => {
-    return (
-        <>
-            <Navbar />
-            <Sidebar />
-        </>
-    );
+  return <Sidebar />;
 };
 
 export default Repartitions;

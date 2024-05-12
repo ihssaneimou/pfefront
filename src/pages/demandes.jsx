@@ -1,8 +1,8 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 
-const Listesurveillants = () => {
+const Demandes = () => {
   return <Sidebar />;
 };
 
-export default Listesurveillants;
+export default Demandes;

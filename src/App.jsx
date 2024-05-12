@@ -5,21 +5,29 @@ import Verification from "./pages/verification";
 import Session from "./pages/session";
 import Listeetudiant from "./pages/listeetudiant";
 import Listesurveillants from "./pages/listesurveillants";
-import Test from "./pages/test";
 import Repartitions from "./pages/repartitions";
+import Tablettes from "./pages/tablettes";
+import Navbar from "./components/Navbar";
+import Demandes from "./pages/demandes";
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
         <Route path="/authentification" element={<Authentification />} />
         <Route path="/verification" element={<Verification />} />
         <Route path="/home" element={<Home />} />
         <Route path="/session" element={<Session />} />
         <Route path="/session/listeetudiant" element={<Listeetudiant />} />
-        <Route path="/session/listesurveillant" element={<Listesurveillants />} />
-        <Route path="/test" element={<Test />} />
+        <Route
+          path="/session/listesurveillant"
+          element={<Listesurveillants />}
+        />
         <Route path="/repartitions" element={<Repartitions />} />
+        <Route path="/tablettesassociees" element={<Tablettes />} />
+        <Route path="/demandesassociation" element={<Demandes />} />
       </Routes>
     </BrowserRouter>
   );

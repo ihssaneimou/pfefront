@@ -1,13 +1,7 @@
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 const Session = () => {
-  return (
-    <>
-      <Navbar />
-      <Sidebar />
-    </>
-  );
+  return <Sidebar />;
 };
 
 export default Session;

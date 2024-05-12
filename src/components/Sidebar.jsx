@@ -4,8 +4,9 @@ import TimeLine from "./TimeLine";
 import HistoriqueSessions from "./HistoriqueSessions";
 import Etudiants from "./Etudiants";
 import Surveillants from "./Surveillants";
-import Test from "./Test.jsx";
 import Repartitions from "./Repartitions.jsx";
+import TablettesAssociees from "./TablettesAssociees.jsx";
+import DemandesAssociation from "./DemandesAssociation.jsx";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -19,10 +20,12 @@ const Sidebar = () => {
         return <Etudiants />;
       case "/session/listesurveillant":
         return <Surveillants />;
-      case "/test":
-        return <Test />;
       case "/repartitions":
         return <Repartitions />;
+      case "/tablettesassociees":
+        return <TablettesAssociees />;
+      case "/demandesassociation":
+        return <DemandesAssociation />;
       default:
         return null;
     }
@@ -61,11 +64,25 @@ const Sidebar = () => {
                 </p>
               </div>
             </div>
-            <Link className="ml-4" to={"/repartitions"}>Repartitions</Link>
-
+            <Link className="ml-4" to={"/repartitions"}>
+              Repartitions
+            </Link>
           </li>
           <li>
-            <Link to={"/"}>Gestion tablettes</Link>
+            <div className="collapse bg-base-200">
+              <input type="radio" name="my-accordion-1" />
+              <div className="collapse-title">Gestion tablettes</div>
+              <div className="collapse-content">
+                <p className="mb-2">
+                  <Link to={"/tablettesassociees"}>Tablettes associees</Link>
+                </p>
+                <p>
+                  <Link to={"/demandesassociation"}>
+                    Demandes d'association
+                  </Link>
+                </p>
+              </div>
+            </div>
           </li>
           <li>
             <Link>Les PVs</Link>

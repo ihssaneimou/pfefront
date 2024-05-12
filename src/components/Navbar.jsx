@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "./fsac.png"
+import logo from "../assets/fsac.png";
 
 const Navbar = () => {
   return (
@@ -32,8 +32,8 @@ const Navbar = () => {
           </svg>
         </label>
 
-        <a href="/home" className="logo-link cursor-pointer ml-16"> 
-          <img src={logo} alt="Logo" className="logo w-1/4" /> 
+        <a href="/home" className="logo-link cursor-pointer ml-16">
+          <img src={logo} alt="Logo" className="logo w-1/4" />
         </a>
       </div>
       <div className="flex-none gap-2">
