@@ -1,6 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Etudiants = () => {
+  const [etudiants, setEtudiants] = useState([]);
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [codeApogee, setCodeApogee] = useState("");
+  const [CNE, setCNE] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/etudiant") // Adjust the URL based on your API address
+      .then((response) => {
+        setEtudiants(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the etudiants", error);
+      });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/etudiant/create",
+        {
+          nom_etudiant: nom,
+          prenom_etudiant: prenom,
+          codeApogee, // Adjust field names based on your actual database schema
+          CNE,
+          photo: "default-url", // Provide a default or a way to upload an image
+        }
+      );
+      alert("Étudiant ajouté avec succès!");
+      console.log(response.data);
+      document.getElementById("my_modal_1").close(); // Close the modal on success
+    } catch (error) {
+      console.error("Erreur lors de l’ajout de l’étudiant", error);
+      alert("Erreur lors de l’ajout de l’étudiant");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/etudiant/${id}`);
+      setEtudiants(etudiants.filter((etudiant) => etudiant.id !== id));
+      alert("Étudiant supprimé avec succès!");
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'étudiant", error);
+      alert("Erreur lors de la suppression de l'étudiant");
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <div className="w-full flex mb-4">
@@ -42,55 +93,67 @@ const Etudiants = () => {
             Ajouter Etudiant
           </button>
           <dialog id="my_modal_1" className="modal">
-            <div className="modal-box bg-gray-200">
-              <h3 className="font-bold text-lg mb-4">Ajouter un etudiant</h3>
+            <form onSubmit={handleSubmit} className="modal-box bg-gray-200">
+              <h3 className="font-bold text-lg mb-4">Ajouter un étudiant</h3>
               <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Nom" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Nom"
+                  value={nom}
+                  onChange={(e) => setNom(e.target.value)}
+                />
               </label>
               <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Prénom" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Prénom"
+                  value={prenom}
+                  onChange={(e) => setPrenom(e.target.value)}
+                />
               </label>
               <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <input type="text" className="grow" placeholder="Code Apogee" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Code Apogee"
+                  value={codeApogee}
+                  onChange={(e) => setCodeApogee(e.target.value)}
+                />
               </label>
               <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-                <input type="text" className="grow" placeholder="CNE" />
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="CNE"
+                  value={CNE}
+                  onChange={(e) => setCNE(e.target.value)}
+                />
               </label>
               <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
+                <button
+                  type="submit"
+                  className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                  onClick={handleSubmit}
+                >
                   Confirmer
                 </button>
                 <div></div>
-                <form method="dialog">
-                  {/* if there is a button in form, it will close the modal */}
-                  <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
-                    Close
-                  </button>
-                </form>
+                <button
+                  type="button"
+                  className="btn float-right text-white bg-red-400 border-none hover:bg-red-500"
+                  onClick={() => document.getElementById("my_modal_1").close()}
+                >
+                  Close
+                </button>
               </div>
-            </div>
+            </form>
           </dialog>
         </div>
       </div>
 
       <table className="table lg:w-[70vw] w-full">
-        {/* head */}
         <thead>
           <tr className="text-slate-700">
             <th>Nom</th>
@@ -102,151 +165,66 @@ const Etudiants = () => {
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-          <tr className="cursor-pointer">
-            <td>Nisrin</td>
-            <td>ELAKROUD</td>
-            <td>216673937</td>
-            <td>R136650276</td>
-            <td>
-              <div className="avatar">
-                <div className="mask mask-squircle w-12 h-12">
-                  <img
-                    src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png"
-                    alt="Avatar Tailwind CSS Component"
-                  />
+          {etudiants.map((etudiant) => (
+            <tr className="cursor-pointer" key={etudiant.id}>
+              <td>{etudiant.nom_etudiant}</td>
+              <td>{etudiant.prenom_etudiant}</td>
+              <td>{etudiant.nom_etudiant}</td>
+              <td>{etudiant.CNE}</td>
+              <td>
+                <div className="avatar">
+                  <div className="mask mask-squircle w-12 h-12">
+                    <img src={etudiant.photo} alt="Etudiant Avatar" />
+                  </div>
                 </div>
-              </div>
-            </td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-x"
-                  viewBox="0 0 16 16"
+              </td>
+              <td>
+                <button
+                  className="btn btn-ghost btn-xs"
+                  onClick={() => handleDelete(etudiant.id)}
                 >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>{" "}
-            </th>
-          </tr>
-          <tr className="cursor-pointer">
-            <td>Nisrin</td>
-            <td>ELAKROUD</td>
-            <td>216673937</td>
-            <td>R136650276</td>
-            <td>
-              <div className="avatar">
-                <div className="mask mask-squircle w-12 h-12">
-                  <img
-                    src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png"
-                    alt="Avatar Tailwind CSS Component"
-                  />
-                </div>
-              </div>
-            </td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-x"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-          <tr className=" cursor-pointer">
-            <td>Nisrin</td>
-            <td>ELAKROUD</td>
-            <td>216673937</td>
-            <td>R136650276</td>
-            <td>
-              <div className="avatar">
-                <div className="mask mask-squircle w-12 h-12">
-                  <img
-                    src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png"
-                    alt="Avatar Tailwind CSS Component"
-                  />
-                </div>
-              </div>
-            </td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-x"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-        </tbody>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-person-x"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
+                  </svg>
+                </button>
 
-        <tfoot>
-          <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th>
-              <label htmlFor="date">Date Expiration : </label>
-              <input type="date" />
-            </th>
-          </tr>
-        </tfoot>
+                <button className="btn btn-ghost btn-xs">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-pencil"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          ))}
+          <tfoot>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>
+                <label htmlFor="date">Date Expiration : </label>
+                <input type="date" />
+              </th>
+            </tr>
+          </tfoot>
+        </tbody>
       </table>
     </div>
   );

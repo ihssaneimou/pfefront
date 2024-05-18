@@ -1,6 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Surveillants = () => {
+  const [surveillants, setSurveillants] = useState([]);
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [numBureau, setNumBureau] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/surveillant")
+      .then((response) => {
+        setSurveillants(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching surveillants", error);
+      });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/surveillant/create",
+        {
+          nomComplet_s: `${nom} ${prenom}`,
+          numBureau, // Assuming you add numBureau in your backend model and controller
+        }
+      );
+      setSurveillants([...surveillants, response.data]);
+      alert("Surveillant ajouté avec succès!");
+      document.getElementById("my_modal_1").close();
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du surveillant", error);
+      alert("Erreur lors de l'ajout du surveillant");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/surveillant/${id}`);
+      setSurveillants(surveillants.filter((s) => s.id !== id));
+      alert("Surveillant supprimé avec succès!");
+    } catch (error) {
+      console.error("Erreur lors de la suppression du surveillant", error);
+      alert("Erreur lors de la suppression du surveillant");
+    }
+  };
   return (
     <div className="overflow-x-auto">
       <div className="w-full flex mb-4">
@@ -44,52 +90,64 @@ const Surveillants = () => {
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box bg-gray-200">
               <h3 className="font-bold text-lg mb-4">Ajouter un surveillant</h3>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Nom" />
-              </label>
-              <label className="input bg-gray-300 mb-4 input-bordered flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Prénom" />
-              </label>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-                <input type="text" className="grow" placeholder="Num bureau" />
-              </label>
-              <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
-                  Confirmer
-                </button>
-                <div></div>
-                <form method="dialog">
-                  {/* if there is a button in form, it will close the modal */}
-                  <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+              <form onSubmit={handleSubmit}>
+                {" "}
+                {/* Assuming you have defined handleSubmit */}
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Nom"
+                    value={nom}
+                    onChange={(e) => setNom(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Prénom"
+                    value={prenom}
+                    onChange={(e) => setPrenom(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Num bureau"
+                    value={numBureau}
+                    onChange={(e) => setNumBureau(e.target.value)}
+                  />
+                </label>
+                <div className="modal-action grid grid-cols-3 gap-4 items-center">
+                  <button
+                    type="submit"
+                    onClick={handleSubmit}
+                    className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                  >
+                    Confirmer
+                  </button>
+                  <div></div>
+                  <button
+                    type="button"
+                    className="btn float-right text-white bg-red-400 border-none hover:bg-red-500"
+                    onClick={() =>
+                      document.getElementById("my_modal_1").close()
+                    }
+                  >
                     Close
                   </button>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </dialog>
         </div>
       </div>
 
       <table className="table lg:w-[70vw] w-full">
-        {/* head */}
         <thead>
-          <tr>
+          <tr className="text-slate-700">
             <th>Nom</th>
             <th>Prenom</th>
             <th>Num bureau</th>
@@ -97,112 +155,32 @@ const Surveillants = () => {
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-          <tr className="hover cursor-pointer">
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-person-x"
-                  viewBox="0 0 16 16"
+          {surveillants.map((surveillant) => (
+            <tr className="hover cursor-pointer" key={surveillant.id}>
+              <td>{surveillant.nom}</td>
+              <td>{surveillant.prenom}</td>
+              <td>{surveillant.numBureau}</td>
+              <th>
+                <button
+                  className="btn btn-ghost btn-xs"
+                  onClick={() => handleDelete(surveillant.id)}
                 >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>{" "}
-            </th>
-          </tr>
-          <tr className="hover cursor-pointer">
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-person-x"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>{" "}
-            </th>
-          </tr>
-          <tr className="hover cursor-pointer">
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <td>XXXXXX</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-person-x"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                </svg>
-              </button>
-              <button className="btn btn-ghost btn-xs">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-pencil"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                </svg>
-              </button>
-            </th>
-          </tr>
+                  {/* Delete Icon */}
+                </button>
+                <button className="btn btn-ghost btn-xs">
+                  {/* Edit Icon */}
+                </button>
+              </th>
+            </tr>
+          ))}
         </tbody>
-
         <tfoot>
           <tr>
             <th></th>
             <th></th>
             <th></th>
             <th>
-              <label htmlFor="date">Date Expiration : </label>
+              <label htmlFor="date">Date Expiration:</label>
               <input type="date" />
             </th>
           </tr>
