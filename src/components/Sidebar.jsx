@@ -7,6 +7,7 @@ import Surveillants from "./Surveillants";
 import Repartitions from "./Repartitions.jsx";
 import TablettesAssociees from "./TablettesAssociees.jsx";
 import DemandesAssociation from "./DemandesAssociation.jsx";
+import Pvs from "./Pvs.jsx";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -26,6 +27,8 @@ const Sidebar = () => {
         return <TablettesAssociees />;
       case "/demandesassociation":
         return <DemandesAssociation />;
+      case "/pvs":
+        return <Pvs />;
       default:
         return null;
     }
@@ -77,15 +80,13 @@ const Sidebar = () => {
                   <Link to={"/tablettesassociees"}>Tablettes associees</Link>
                 </p>
                 <p>
-                  <Link to={"/demandesassociation"}>
-                    Demandes d'association
-                  </Link>
+                  <Link to={"/demandesassociation"}>Demandes d'association</Link>
                 </p>
               </div>
             </div>
           </li>
           <li>
-            <Link>Les PVs</Link>
+            <Link to={"/pvs"}>Les PVs</Link>
           </li>
         </ul>
       </div>
