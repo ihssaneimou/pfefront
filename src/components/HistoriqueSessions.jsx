@@ -8,7 +8,7 @@ const HistoriqueSessions = () => {
           <h1 className="text-xl mb-4 mr-10">Historique des sessions</h1>
         </div>
         <div>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input bg-gray-300 input-bordered flex items-center gap-2">
             <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -33,16 +33,16 @@ const HistoriqueSessions = () => {
             Créer session
           </button>
           <dialog id="my_modal_1" className="modal">
-            <div className="modal-box">
+            <div className="modal-box bg-gray-200">
               <h3 className="font-bold text-lg mb-4">Créer une session</h3>
-              <select className="select select-bordered w-full max-w-xs mb-4">
+              <select className="select bg-gray-300 select-bordered w-full max-w-xs mb-4">
                 <option disabled selected>
                   Nom session
                 </option>
                 <option>Automne-hiver</option>
                 <option>Printemps-été</option>
               </select>
-              <select className="select select-bordered w-full max-w-xs">
+              <select className="select bg-gray-300 select-bordered w-full max-w-xs">
                 <option disabled selected>
                   Type session
                 </option>
@@ -56,7 +56,9 @@ const HistoriqueSessions = () => {
                 <div></div>
                 <form method="dialog">
                   {/* if there is a button in form, it will close the modal */}
-                  <button className="btn float-right">Close</button>
+                  <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+                    Close
+                  </button>
                 </form>
               </div>
             </div>
@@ -67,7 +69,7 @@ const HistoriqueSessions = () => {
       <table className="table lg:w-[70vw] w-full">
         {/* head */}
         <thead>
-          <tr>
+          <tr className="text-slate-700">
             <th>Nom session</th>
             <th>Type session</th>
             <th>Date debut</th>
@@ -76,30 +78,30 @@ const HistoriqueSessions = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
-            <td className=" text-white">
+            <td>
               <button className="btn btn-ghost btn-xs">Consulter</button>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
-            <td className=" text-white">
+            <td>
               <button className="btn btn-ghost btn-xs">Consulter</button>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
             <td>XXXXXX</td>
-            <td className=" text-white">
+            <td>
               <button className="btn btn-ghost btn-xs">Consulter</button>
             </td>
           </tr>

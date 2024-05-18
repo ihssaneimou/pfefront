@@ -9,7 +9,7 @@ const DemandesAssociation = () => {
         </div>
         <div></div>
         <div>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input bg-gray-300 input-bordered flex items-center gap-2">
             <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +30,7 @@ const DemandesAssociation = () => {
       <table className="table lg:w-[70vw] w-full">
         {/* head */}
         <thead>
-          <tr>
+          <tr className="text-slate-700">
             <th>Num</th>
             <th>Adresse MAC</th>
             <th>Action</th>
@@ -38,7 +38,7 @@ const DemandesAssociation = () => {
         </thead>
         <tbody>
           {/* row 1 */}
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>1</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td className="flex gap-4">
@@ -50,7 +50,7 @@ const DemandesAssociation = () => {
               </button>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>2</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td className="flex gap-4">
@@ -62,7 +62,7 @@ const DemandesAssociation = () => {
               </button>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>3</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td className="flex gap-4">

@@ -25,7 +25,7 @@ const Repartitions = () => {
         />
         <div
           role="tabpanel"
-          className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
         >
           <div className="overflow-x-auto">
             <div className="grid grid-cols-3 gap-4 items-center">
@@ -34,7 +34,7 @@ const Repartitions = () => {
               </div>
               <div></div>
               <div>
-                <label className="input input-bordered flex items-center gap-2">
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2">
                   <input type="text" className="grow" placeholder="Search" />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ const Repartitions = () => {
             <table className="table lg:w-[70vw] w-full">
               {/* head */}
               <thead>
-                <tr>
+                <tr className="text-slate-700">
                   <th>Nom</th>
                   <th>Prenom</th>
                   <th>Code apogee</th>
@@ -64,21 +64,21 @@ const Repartitions = () => {
               </thead>
               <tbody>
                 {/* row 1 */}
-                <tr className="hover cursor-pointer">
+                <tr className=" cursor-pointer">
                   <td>Nisrin</td>
                   <td>ELAKROUD</td>
                   <td>216673937</td>
                   <td>1</td>
                   <td>M01</td>
                 </tr>
-                <tr className="hover cursor-pointer">
+                <tr className=" cursor-pointer">
                   <td>Nisrin</td>
                   <td>ELAKROUD</td>
                   <td>216673937</td>
                   <td>1</td>
                   <td>M01</td>
                 </tr>
-                <tr className="hover cursor-pointer">
+                <tr className=" cursor-pointer">
                   <td>Nisrin</td>
                   <td>ELAKROUD</td>
                   <td>216673937</td>
@@ -112,7 +112,7 @@ const Repartitions = () => {
         />
         <div
           role="tabpanel"
-          className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
         >
           <div className="overflow-x-auto">
             <div className="grid grid-cols-3 gap-4 items-center">
@@ -121,7 +121,7 @@ const Repartitions = () => {
               </div>
               <div></div>
               <div>
-                <label className="input input-bordered flex items-center gap-2">
+                <label className="input input-bordered bg-gray-300 flex items-center gap-2">
                   <input type="text" className="grow" placeholder="Search" />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -197,14 +197,14 @@ const Repartitions = () => {
           <input
             id="dateInput"
             type="date"
-            className="mx-auto border border-gray-300 rounded-md p-2"
+            className="mx-auto border bg-gray-300 rounded-md p-2"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
         <div className="w-full flex mb-4">
           <select
-            className="mx-auto select select-bordered w-full max-w-xs"
+            className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
             value={local}
             onChange={(e) => setLocal(e.target.value)}
           >
@@ -217,7 +217,7 @@ const Repartitions = () => {
         </div>
         <div className="w-full flex mb-4">
           <select
-            className="mx-auto select select-bordered w-full max-w-xs"
+            className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
             value={demiJournee}
             onChange={(e) => setDemiJournee(e.target.value)}
           >

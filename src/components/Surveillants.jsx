@@ -4,7 +4,7 @@ const Surveillants = () => {
   return (
     <div className="overflow-x-auto">
       <div className="w-full flex mb-4">
-        <select className="mx-auto select select-bordered w-full max-w-xs">
+        <select className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs">
           <option disabled selected>
             Selectionner le nom du departement
           </option>
@@ -17,7 +17,7 @@ const Surveillants = () => {
           <h1 className="text-xl mb-4 mr-10">Liste des surveillants</h1>
         </div>
         <div>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex bg-gray-300 items-center gap-2">
             <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +42,9 @@ const Surveillants = () => {
             Ajouter Surveillant
           </button>
           <dialog id="my_modal_1" className="modal">
-            <div className="modal-box">
+            <div className="modal-box bg-gray-200">
               <h3 className="font-bold text-lg mb-4">Ajouter un surveillant</h3>
-              <label className="input input-bordered flex items-center gap-2 mb-4">
+              <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -55,7 +55,7 @@ const Surveillants = () => {
                 </svg>
                 <input type="text" className="grow" placeholder="Nom" />
               </label>
-              <label className="input input-bordered flex items-center gap-2">
+              <label className="input bg-gray-300 mb-4 input-bordered flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -66,6 +66,9 @@ const Surveillants = () => {
                 </svg>
                 <input type="text" className="grow" placeholder="Prénom" />
               </label>
+              <label className="input bg-gray-300 input-bordered flex items-center gap-2">
+                <input type="text" className="grow" placeholder="Num bureau" />
+              </label>
               <div className="modal-action grid grid-cols-3 gap-4 items-center">
                 <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
                   Confirmer
@@ -73,7 +76,9 @@ const Surveillants = () => {
                 <div></div>
                 <form method="dialog">
                   {/* if there is a button in form, it will close the modal */}
-                  <button className="btn float-right">Close</button>
+                  <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+                    Close
+                  </button>
                 </form>
               </div>
             </div>

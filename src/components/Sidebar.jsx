@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content h-[100vh] p-8 bg-gray-800 flex flex-col items-center">
+      <div className="drawer-content h-[100vh] p-8 bg-gray-200 text-black flex flex-col items-center">
         {renderContent()}
       </div>
       <div className="drawer-side">

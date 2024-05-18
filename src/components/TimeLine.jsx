@@ -19,7 +19,7 @@ const TimeLine = () => {
             />
           </svg>
         </div>
-        <div className="timeline-end timeline-box">
+        <div className="timeline-end timeline-box text-white">
           Session normale supprimée
         </div>
         <hr />
@@ -41,7 +41,9 @@ const TimeLine = () => {
             />
           </svg>
         </div>
-        <div className="timeline-end timeline-box">Session bien crée</div>
+        <div className="timeline-end timeline-box text-white">
+          Session bien crée
+        </div>
         <hr />
       </li>
       <li>
@@ -61,7 +63,9 @@ const TimeLine = () => {
             />
           </svg>
         </div>
-        <div className="timeline-end timeline-box">Session expirée</div>
+        <div className="timeline-end timeline-box text-white">
+          Session expirée
+        </div>
         <hr />
       </li>
     </ul>

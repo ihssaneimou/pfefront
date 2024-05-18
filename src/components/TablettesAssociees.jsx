@@ -17,7 +17,7 @@ const TablettesAssociees = () => {
         </div>
         <div></div>
         <div>
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input bg-gray-300 input-bordered flex items-center gap-2">
             <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ const TablettesAssociees = () => {
       <table className="table lg:w-[70vw] w-full">
         {/* head */}
         <thead>
-          <tr>
+          <tr className="text-slate-700">
             <th>Num</th>
             <th>Adresse MAC</th>
             <th>Code Association</th>
@@ -48,7 +48,7 @@ const TablettesAssociees = () => {
         <tbody>
           {/* row 1 */}
 
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>1</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td>"xxxx"</td>
@@ -65,14 +65,14 @@ const TablettesAssociees = () => {
                 Affecter
               </button>
               <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-gray-200">
                   <form
                     className="overflow-x-auto mb-4"
                     onSubmit={handleSubmit}
                   >
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={tablette}
                         onChange={(e) => setTablette(e.target.value)}
                       >
@@ -87,14 +87,14 @@ const TablettesAssociees = () => {
                       <input
                         id="dateInput"
                         type="date"
-                        className="mx-auto  w-full max-w-xs border border-gray-300 rounded-md p-2"
+                        className="mx-auto  bg-gray-300 w-full max-w-xs border border-gray-300 rounded-md p-2"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                       />
                     </div>
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={demiJournee}
                         onChange={(e) => setDemiJournee(e.target.value)}
                       >
@@ -115,7 +115,9 @@ const TablettesAssociees = () => {
                       <div></div>
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn float-right">Close</button>
+                        <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+                          Close
+                        </button>
                       </form>
                     </div>
                   </form>
@@ -123,7 +125,7 @@ const TablettesAssociees = () => {
               </dialog>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>2</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td>"xxxx"</td>
@@ -140,14 +142,14 @@ const TablettesAssociees = () => {
                 Affecter
               </button>
               <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-gray-200">
                   <form
                     className="overflow-x-auto mb-4"
                     onSubmit={handleSubmit}
                   >
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={tablette}
                         onChange={(e) => setTablette(e.target.value)}
                       >
@@ -162,14 +164,14 @@ const TablettesAssociees = () => {
                       <input
                         id="dateInput"
                         type="date"
-                        className="mx-auto  w-full max-w-xs border border-gray-300 rounded-md p-2"
+                        className="mx-auto  bg-gray-300 w-full max-w-xs border border-gray-300 rounded-md p-2"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                       />
                     </div>
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={demiJournee}
                         onChange={(e) => setDemiJournee(e.target.value)}
                       >
@@ -190,7 +192,9 @@ const TablettesAssociees = () => {
                       <div></div>
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn float-right">Close</button>
+                        <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+                          Close
+                        </button>
                       </form>
                     </div>
                   </form>
@@ -198,7 +202,7 @@ const TablettesAssociees = () => {
               </dialog>
             </td>
           </tr>
-          <tr className="hover cursor-pointer">
+          <tr className=" cursor-pointer">
             <td>3</td>
             <td>"xx:xx:xx:xx:xx:xx"</td>
             <td>"xxxx"</td>
@@ -215,14 +219,14 @@ const TablettesAssociees = () => {
                 Affecter
               </button>
               <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-gray-200">
                   <form
                     className="overflow-x-auto mb-4"
                     onSubmit={handleSubmit}
                   >
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={tablette}
                         onChange={(e) => setTablette(e.target.value)}
                       >
@@ -237,14 +241,14 @@ const TablettesAssociees = () => {
                       <input
                         id="dateInput"
                         type="date"
-                        className="mx-auto  w-full max-w-xs border border-gray-300 rounded-md p-2"
+                        className="mx-auto  bg-gray-300 w-full max-w-xs border border-gray-300 rounded-md p-2"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                       />
                     </div>
                     <div className="w-full flex mb-4">
                       <select
-                        className="mx-auto select select-bordered w-full max-w-xs"
+                        className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
                         value={demiJournee}
                         onChange={(e) => setDemiJournee(e.target.value)}
                       >
@@ -265,7 +269,9 @@ const TablettesAssociees = () => {
                       <div></div>
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn float-right">Close</button>
+                        <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
+                          Close
+                        </button>
                       </form>
                     </div>
                   </form>
