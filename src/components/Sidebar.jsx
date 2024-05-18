@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import TimeLine from "./TimeLine";
 import HistoriqueSessions from "./HistoriqueSessions";
@@ -8,8 +8,36 @@ import Repartitions from "./Repartitions.jsx";
 import TablettesAssociees from "./TablettesAssociees.jsx";
 import DemandesAssociation from "./DemandesAssociation.jsx";
 import Pvs from "./Pvs.jsx";
-
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import {
+  Article,
+  DocumentScannerSharp,
+  FileCopy,
+  FileOpen,
+  FilePresent,
+  HomeSharp,
+  ListAltSharp,
+  Person,
+  Timelapse,
+} from "@mui/icons-material";
 const Sidebar = () => {
+  const [open, setOpen] = useState(false);
+  const [openTablette, setOpenTablette] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  const handleClickTablette = () => {
+    setOpenTablette(!open);
+  };
+
   const location = useLocation();
   const renderContent = () => {
     switch (location.pathname) {
@@ -40,55 +68,89 @@ const Sidebar = () => {
       <div className="drawer-content h-[100vh] p-8 bg-gray-200 text-black flex flex-col items-center">
         {renderContent()}
       </div>
-      <div className="drawer-side">
+      <div className="drawer-side bg-gray-100 text-base-100">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
-          className="drawer-overlay"
+          className="drawer-overlay "
         ></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-          {/* Sidebar content here */}
-          <li>
-            <Link to={"/home"}>Home</Link>
-          </li>
-          <li>
-            <Link to={"/session"}>Session</Link>
-          </li>
-          <li>
-            <div className="collapse bg-base-200">
-              <input type="radio" name="my-accordion-1" />
-              <div className="collapse-title">Les listes</div>
-              <div className="collapse-content">
-                <p className="mb-2">
-                  <Link to={"/session/listeetudiant"}>Etudiants</Link>
-                </p>
-                <p>
-                  <Link to={"/session/listesurveillant"}>Surveillants</Link>
-                </p>
-              </div>
-            </div>
-            <Link className="ml-4" to={"/repartitions"}>
-              Repartitions
-            </Link>
-          </li>
-          <li>
-            <div className="collapse bg-base-200">
-              <input type="radio" name="my-accordion-1" />
-              <div className="collapse-title">Gestion tablettes</div>
-              <div className="collapse-content">
-                <p className="mb-2">
-                  <Link to={"/tablettesassociees"}>Tablettes associees</Link>
-                </p>
-                <p>
-                  <Link to={"/demandesassociation"}>Demandes d'association</Link>
-                </p>
-              </div>
-            </div>
-          </li>
-          <li>
-            <Link to={"/pvs"}>Les PVs</Link>
-          </li>
-        </ul>
+        <List
+          sx={{ width: "100%", maxWidth: 360 }}
+          component="nav"
+          aria-labelledby="nested-list-subheader"
+          className="bg-gray-100"
+        >
+          <ListItemButton href="/home">
+            <ListItemIcon>
+              <HomeSharp />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItemButton>
+          <ListItemButton href="/session">
+            <ListItemIcon>
+              <Timelapse />
+            </ListItemIcon>
+            <ListItemText primary="Session" />
+          </ListItemButton>
+          <ListItemButton onClick={handleClick}>
+            <ListItemIcon>
+              <ListAltSharp />
+            </ListItemIcon>
+            <ListItemText primary="Les listes" />
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} href="/session/listeetudiant">
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText primary="Etudiants" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }} href="/session/listesurveillant">
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText primary="Surveillants" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+          <ListItemButton href="/repartitions">
+            <ListItemIcon>
+              <Article />
+            </ListItemIcon>
+            <ListItemText primary="Repartitions" />
+          </ListItemButton>
+          <ListItemButton onClick={handleClickTablette}>
+            <ListItemIcon>
+              <FileCopy />
+            </ListItemIcon>
+            <ListItemText primary="Gestion tablettes" />
+            {openTablette ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openTablette} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} href="/tablettesassociees">
+                <ListItemIcon>
+                  <FileOpen />
+                </ListItemIcon>
+                <ListItemText primary="Tablettes associees" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }} href="/demandesassociation">
+                <ListItemIcon>
+                  <FilePresent />
+                </ListItemIcon>
+                <ListItemText primary="Demandes d'associations" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+          <ListItemButton href="/pvs">
+            <ListItemIcon>
+              <DocumentScannerSharp />
+            </ListItemIcon>
+            <ListItemText primary="Les PVs" />
+          </ListItemButton>
+        </List>
       </div>
     </div>
   );
