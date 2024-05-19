@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
 const DemandesAssociation = () => {
+  const [demandesAcceptees, setDemandesAcceptees] = useState([]);
+
+  const accepterDemande = (Num) => {
+    console.log("Demande acceptée  :", Num);
+  };
+
+  const refuserDemande = (Num) => {
+    console.log("Demande refusée :", Num);
+  };
+
+  const ajouterDemandeAcceptee = (demandeAcceptee) => {
+    setDemandesAcceptees([...demandesAcceptees, demandeAcceptee]);
+  };
+
+
+
   return (
     <div className="overflow-x-auto">
       <div className="grid grid-cols-3 gap-4 items-center">
         <div>
-          <h1 className="text-xl mb-4 mr-10">Les demandes d'associations</h1>
+          <h1 className="text-xl mb-4 mr-10">Les demandes associations</h1>
         </div>
         <div></div>
         <div>
@@ -37,43 +53,21 @@ const DemandesAssociation = () => {
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-          <tr className=" cursor-pointer">
-            <td>1</td>
-            <td>"xx:xx:xx:xx:xx:xx"</td>
-            <td className="flex gap-4">
-              <button className=" p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
-                Accepter
-              </button>
-              <button className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none">
-                Refuser
-              </button>
-            </td>
-          </tr>
-          <tr className=" cursor-pointer">
-            <td>2</td>
-            <td>"xx:xx:xx:xx:xx:xx"</td>
-            <td className="flex gap-4">
-              <button className=" p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
-                Accepter
-              </button>
-              <button className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none">
-                Refuser
-              </button>
-            </td>
-          </tr>
-          <tr className=" cursor-pointer">
-            <td>3</td>
-            <td>"xx:xx:xx:xx:xx:xx"</td>
-            <td className="flex gap-4">
-              <button className=" p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
-                Accepter
-              </button>
-              <button className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none">
-                Refuser
-              </button>
-            </td>
-          </tr>
+          {/* Remplacez les données factices par vos propres données */}
+          {demandesAcceptees.map((demande, index) => (
+            <tr key={index}>
+              <td>{demande.Num}</td>
+              <td>{demande.adresseMAC}</td>
+              <td>
+                <button
+                  className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none"
+                  onClick={() => refuserDemande(demande.Num)}
+                >
+                  Refuser
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

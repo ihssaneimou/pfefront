@@ -1,7 +1,18 @@
 import React from "react";
 import logo from "../assets/fsac.png";
-
+import axios from "axios";
 const Navbar = () => {
+  const handleLogout = async () => {
+    try {
+      
+      localStorage.removeItem("token");
+      await axios.post("http://localhost:8000/api/logout");
+
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion :", error);
+    }
+  };
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -56,7 +67,7 @@ const Navbar = () => {
             <span className="badge badge-xs badge-primary indicator-item"></span>
           </div>
         </button>
-        <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none">
+        <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none" onClick={handleLogout}>
           Deconnexion
         </button>
       </div>
