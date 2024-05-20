@@ -9,25 +9,41 @@ import Repartitions from "./pages/repartitions";
 import Tablettes from "./pages/tablettes";
 import Navbar from "./components/Navbar";
 import Demandes from "./pages/demandes";
-import Pvs from "./pages/pvs.jsx";
+import Pvs from "./pages/pvs";
+import { createContext, useContext, useState } from "react";
+
+const TokenContext = createContext();
+export const useToken = () => useContext(TokenContext);
+
+export const TokenProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  return (
+    <TokenContext.Provider value={{ token, setToken }}>
+      {children}
+    </TokenContext.Provider>
+  );
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/authentification" element={<Authentification />} />
-        <Route path="/verification" element={<Verification />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/session" element={<Session />} />
-        <Route path="/session/listeetudiant" element={<Listeetudiant />} />
-        <Route path="/session/listesurveillant" element={<Listesurveillants />} />
-        <Route path="/repartitions" element={<Repartitions />} />
-        <Route path="/tablettesassociees" element={<Tablettes />} />
-        <Route path="/demandesassociation" element={<Demandes />} />
-        <Route path="/pvs" element={<Pvs />} />
-      </Routes>
-    </BrowserRouter>
+    <TokenProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/authentification" element={<Authentification />} />
+          <Route path="/verification" element={<Verification />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/session" element={<Session />} />
+          <Route path="/session/listeetudiant" element={<Listeetudiant />} />
+          <Route path="/session/listesurveillant" element={<Listesurveillants />} />
+          <Route path="/repartitions" element={<Repartitions />} />
+          <Route path="/tablettesassociees" element={<Tablettes />} />
+          <Route path="/demandesassociation" element={<Demandes />} />
+          <Route path="/pvs" element={<Pvs />} />
+        </Routes>
+      </BrowserRouter>
+    </TokenProvider>
   );
 }
 

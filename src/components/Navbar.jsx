@@ -1,27 +1,53 @@
 import React from "react";
 import logo from "../assets/fsac.png";
 import axios from "axios";
+import { useToken } from "../App";
+
 const Navbar = () => {
+  const { token, setToken } = useToken();
+
   const handleLogout = async () => {
     try {
-      
-      localStorage.removeItem("token");
-      await axios.post("http://localhost:8000/api/logout");
+      if (!token) {
+        throw new Error("No token found");
+      }
 
-      window.location.href = "/login";
+      // Log token to verify it's retrieved correctly
+      console.log("Token before logout:", token);
+
+      // Set the Authorization header and send the logout request
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Logout response:", response.data); // Log the response from the server
+
+      // Remove the token from both localStorage and context state
+      localStorage.removeItem("token");
+      setToken(null);
+
+      // Redirect to the login page
+      window.location.href = "/authentification";
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
+      alert("Une erreur est survenue lors de la déconnexion. Veuillez réessayer.");
     }
   };
+
   return (
-    <div className="navbar bg-base-100">
-      <div className="flex-1">
+    <nav className="navbar bg-gray-900 text-white px-4 py-2 shadow-md">
+      <div className="flex-1 flex items-center">
         <label
           htmlFor="my-drawer-2"
           className="btn btn-circle swap swap-rotate drawer-button lg:hidden"
         >
           <input type="checkbox" />
-
           <svg
             className="swap-off fill-current"
             xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +57,6 @@ const Navbar = () => {
           >
             <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
           </svg>
-
           <svg
             className="swap-on fill-current"
             xmlns="http://www.w3.org/2000/svg"
@@ -43,16 +68,16 @@ const Navbar = () => {
           </svg>
         </label>
 
-        <a href="/home" className="logo-link cursor-pointer ml-16">
-          <img src={logo} alt="Logo" className="logo w-1/4" />
+        <a href="/home" className="logo-link cursor-pointer ml-4 lg:ml-16">
+          <img src={logo} alt="Logo" className="logo w-16 lg:w-24" />
         </a>
       </div>
-      <div className="flex-none gap-2">
+      <div className="flex-none flex items-center gap-4">
         <button className="btn btn-ghost btn-circle">
           <div className="indicator">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -67,11 +92,14 @@ const Navbar = () => {
             <span className="badge badge-xs badge-primary indicator-item"></span>
           </div>
         </button>
-        <button className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none" onClick={handleLogout}>
-          Deconnexion
+        <button
+          className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+          onClick={handleLogout}
+        >
+          Déconnexion
         </button>
       </div>
-    </div>
+    </nav>
   );
 };
 

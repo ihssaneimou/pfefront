@@ -3,41 +3,25 @@ import axios from "axios";
 
 const Etudiants = () => {
   const [etudiants, setEtudiants] = useState([]);
+  const [filteredEtudiants, setFilteredEtudiants] = useState([]);
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [codeApogee, setCodeApogee] = useState("");
   const [CNE, setCNE] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/etudiant") // Adjust the URL based on your API address
+      .get("http://localhost:8000/api/etudiant")
       .then((response) => {
         setEtudiants(response.data);
+        setFilteredEtudiants(response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the etudiants", error);
       });
   }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case 'nom':
-        setNom(value);
-        break;
-      case 'prenom':
-        setPrenom(value);
-        break;
-      case 'codeApogee':
-        setCodeApogee(value);
-        break;
-      case 'CNE':
-        setCNE(value);
-        break;
-      default:
-        break;
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,29 +31,45 @@ const Etudiants = () => {
         {
           nom_etudiant: nom,
           prenom_etudiant: prenom,
-          codeApogee:  codeApogee, // Adjust field names based on your actual database schema
+          codeApogee: codeApogee,
           CNE: CNE,
-          photo: "default-url", // Provide a default or a way to upload an image
+          photo: "default-url",
         }
       );
       alert("Étudiant ajouté avec succès!");
-      console.log(response.data);
-      document.getElementById("my_modal_1").close(); // Close the modal on success
+      setEtudiants([...etudiants, response.data]); // Update etudiants state with the new student
+      setFilteredEtudiants([...etudiants, response.data]);
+      setModalOpen(false); // Close the modal on success
     } catch (error) {
       console.error("Erreur lors de l’ajout de l’étudiant", error);
       alert("Erreur lors de l’ajout de l’étudiant");
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (codeApogee) => {
     try {
-      await axios.delete(`http://localhost:8000/api/etudiant/${id}`);
-      setEtudiants(etudiants.filter((etudiant) => etudiant.id !== id));
+      await axios.delete(`http://localhost:8000/api/etudiant/${codeApogee}`);
+      const updatedEtudiants = etudiants.filter((etudiant) => etudiant.codeApogee !== codeApogee);
+      setEtudiants(updatedEtudiants);
+      setFilteredEtudiants(updatedEtudiants);
       alert("Étudiant supprimé avec succès!");
     } catch (error) {
       console.error("Erreur lors de la suppression de l'étudiant", error);
       alert("Erreur lors de la suppression de l'étudiant");
     }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filtered = etudiants.filter((etudiant) => {
+      return (
+        etudiant.nom_etudiant.toLowerCase().includes(query.toLowerCase()) ||
+        etudiant.prenom_etudiant.toLowerCase().includes(query.toLowerCase()) ||
+        etudiant.codeApogee.toLowerCase().includes(query.toLowerCase()) ||
+        etudiant.CNE.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+    setFilteredEtudiants(filtered);
   };
 
   return (
@@ -89,7 +89,13 @@ const Etudiants = () => {
         </div>
         <div>
           <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-            <input type="text" className="grow" placeholder="Search" />
+            <input
+              type="text"
+              className="grow"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -105,72 +111,73 @@ const Etudiants = () => {
           </label>
         </div>
         <div className="flex">
-          {/* Open the modal using document.getElementById('ID').showModal() method */}
           <button
             className="btn mx-auto w-[60%] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-            onClick={() => document.getElementById("my_modal_1").showModal()}
+            onClick={() => setModalOpen(true)}
           >
             Ajouter Etudiant
           </button>
-          <dialog id="my_modal_1" className="modal">
-            <form onSubmit={handleSubmit} className="modal-box bg-gray-200">
-              <h3 className="font-bold text-lg mb-4">Ajouter un étudiant</h3>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Nom"
-                  value={nom}
-                  onChange={(e) => setNom(e.target.value)}
-                />
-              </label>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Prénom"
-                  value={prenom}
-                  onChange={(e) => setPrenom(e.target.value)}
-                />
-              </label>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Code Apogee"
-                  value={codeApogee}
-                  onChange={(e) => setCodeApogee(e.target.value)}
-                />
-              </label>
-              <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="CNE"
-                  value={CNE}
-                  onChange={(e) => setCNE(e.target.value)}
-                />
-              </label>
-              <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                <button
-                  type="submit"
-                  className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                  onClick={handleSubmit}
-                >
-                  Confirmer
-                </button>
-                
-                <div></div>
-                <button
-                  type="button"
-                  className="btn float-right text-white bg-red-400 border-none hover:bg-red-500"
-                  onClick={() => document.getElementById("my_modal_1").close()}
-                >
-                  Close
-                </button>
+          {modalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="modal-box bg-gray-200">
+                <h3 className="font-bold text-lg mb-4">Ajouter un étudiant</h3>
+                <form onSubmit={handleSubmit}>
+                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                    <input
+                      type="text"
+                      className="grow"
+                      placeholder="Nom"
+                      value={nom}
+                      onChange={(e) => setNom(e.target.value)}
+                    />
+                  </label>
+                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                    <input
+                      type="text"
+                      className="grow"
+                      placeholder="Prénom"
+                      value={prenom}
+                      onChange={(e) => setPrenom(e.target.value)}
+                    />
+                  </label>
+                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                    <input
+                      type="text"
+                      className="grow"
+                      placeholder="Code Apogee"
+                      value={codeApogee}
+                      onChange={(e) => setCodeApogee(e.target.value)}
+                    />
+                  </label>
+                  <label className="input bg-gray-300 input-bordered flex items-center gap-2">
+                    <input
+                      type="text"
+                      className="grow"
+                      placeholder="CNE"
+                      value={CNE}
+                      onChange={(e) => setCNE(e.target.value)}
+                    />
+                  </label>
+                  <div className="modal-action grid grid-cols-3 gap-4 items-center">
+                    <button
+                      type="submit"
+                      className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                    >
+                      Confirmer
+                    </button>
+                    <div></div>
+                    <button
+                      type="button"
+                      className="btn float-right text-white bg-red-400 border-none hover:bg-red-500"
+                      onClick={() => setModalOpen(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </dialog>
+            </div>
+          )}
         </div>
       </div>
 
@@ -186,11 +193,11 @@ const Etudiants = () => {
           </tr>
         </thead>
         <tbody>
-          {etudiants.map((etudiant) => (
-            <tr className="cursor-pointer" key={etudiant.id}>
+          {filteredEtudiants.map((etudiant) => (
+            <tr className="cursor-pointer" key={etudiant.codeApogee}>
               <td>{etudiant.nom_etudiant}</td>
               <td>{etudiant.prenom_etudiant}</td>
-              <td>{etudiant.nom_etudiant}</td>
+              <td>{etudiant.codeApogee}</td>
               <td>{etudiant.CNE}</td>
               <td>
                 <div className="avatar">
@@ -202,7 +209,7 @@ const Etudiants = () => {
               <td>
                 <button
                   className="btn btn-ghost btn-xs"
-                  onClick={() => handleDelete(etudiant.id)}
+                  onClick={() => handleDelete(etudiant.codeApogee)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -216,38 +223,9 @@ const Etudiants = () => {
                     <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
                   </svg>
                 </button>
-
-                <button className="btn btn-ghost btn-xs"
-                onClick={() => handleChange(etudiant.id)}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-pencil"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                  </svg>
-                  
-                </button>
-                
               </td>
             </tr>
           ))}
-          <tfoot>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>
-                <label htmlFor="date">Date Expiration : </label>
-                <input type="date" />
-              </th>
-            </tr>
-          </tfoot>
         </tbody>
       </table>
     </div>

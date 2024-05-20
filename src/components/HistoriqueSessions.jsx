@@ -1,50 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+
 const HistoriqueSessions = () => {
   const [sessions, setSessions] = useState([]);
-  const [nom_session, setnom_session] = useState("");
-  const [type_session, settype_session] = useState("");
-  const [datedebut, setdatedebut] = useState("");
-  const [datefin, setdatefin] = useState("");
+  const [nomSession, setNomSession] = useState("");
+  const [typeSession, setTypeSession] = useState("");
+  const [dateDebut, setDateDebut] = useState("");
+  const [dateFin, setDateFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const [sessionData, setSessionData] = useState({
-    nom_session: "",
-    type_session: "",
-    datedebut: "",
-    datefin: "",
-  });
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/session")
+      .then((response) => {
+        setSessions(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sessions", error);
+      });
+  }, []);
 
-
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSessionData({ ...sessionData, [name]: value });
-  };
-  const handleAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newsession = {
-      nom_session: nom_session,
-      type_session: type_session,
-      datedebut : datedebut ,
-      datefin : datefin ,
-    };
-
     try {
-      const response = await axios.post("http://localhost:8000/api/session/create", newsession);
-      setSessions([...sessions, response.data]);
-      alert("Session ajouté avec succès!");
-      document.getElementById("my_modal_1").close();
-      // Reset form fields
-      setnom_session("");
-      settype_session("");
-      setdatedebut("");
-      setdatefin("");
+      const response = await axios.post(
+        "http://localhost:8000/api/session/create",
+        {
+          nom_session: nomSession,
+          type_session: typeSession,
+          datedebut: dateDebut,
+          datefin: dateFin,
+        }
+      );
+      alert("Session ajoutée avec succès!");
+      console.log(response.data);
+      setModalOpen(false); // Close the modal on success
+      setSessions([...sessions, response.data]); // Update sessions state with the new session
     } catch (error) {
-      console.error("Erreur lors de l'ajout du session", error);
-      alert("Erreur lors de l'ajout du session");
+      console.error("Erreur lors de l'ajout de la session", error);
+      alert("Erreur lors de l'ajout de la session");
     }
   };
 
@@ -74,68 +68,72 @@ const HistoriqueSessions = () => {
         <div className="flex">
           <button
             className="btn mx-auto w-[60%] p-3 rounded-md bg-blue-600 text-black hover:bg-blue-700 focus:outline-none"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setModalOpen(true)}
           >
             Créer session
           </button>
-          {isModalOpen && (
+          {modalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="modal-box bg-gray-200">
                 <h3 className="font-bold text-lg mb-4">Créer une session</h3>
-                <select
-                  className="select bg-gray-300 select-bordered w-full max-w-xs mb-4"
-                  name="nom_session"
-                  value={sessionData.nom_session}
-                  onChange={handleChange}
-                >
-                  <option disabled value="">
-                    Nom session
-                  </option>
-                  <option value="Automne-hiver">Automne-hiver</option>
-                  <option value="Printemps-été">Printemps-été</option>
-                </select>
-                <select
-                  className="select bg-gray-300 select-bordered w-full max-w-xs"
-                  name="type_session"
-                  value={sessionData.type_session}
-                  onChange={handleChange}
-                >
-                  <option disabled value="">
-                    Type session
-                  </option>
-                  <option value="Normale">Normale</option>
-                  <option value="Rattrapage">Rattrapage</option>
-                </select>
-                <div className="mt-4 mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date début :</label>
-                  <input
-                    type="date"
-                    className="input bg-gray-300 w-full max-w-xs"
-                    name="datedebut"
-                    value={sessionData.datedebut}
-                    onChange={handleChange}
-                    placeholder="Date début"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date fin :</label>
-                  <input
-                    type="date"
-                    className="input bg-gray-300 w-full max-w-xs"
-                    name="datefin"
-                    value={sessionData.datefin}
-                    onChange={handleChange}
-                    placeholder="Date fin"
-                  />
-                </div>
-                <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                  <button className="w-full p-3 rounded-md bg-blue-600 text-black hover:bg-blue-700 focus:outline-none" onClick={handleAdd}>
-                    Confirmer
-                  </button>
-                  <button className="btn float-right text-black bg-red-400 border-none hover:bg-red-500" onClick={() => setIsModalOpen(false)}>
-                    Close
-                  </button>
-                </div>
+                <form onSubmit={handleSubmit}>
+                  <select
+                    className="select bg-gray-300 select-bordered w-full max-w-xs mb-4"
+                    name="nom_session"
+                    value={nomSession}
+                    onChange={(e) => setNomSession(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Nom session
+                    </option>
+                    <option value="Automne-hiver">Automne-hiver</option>
+                    <option value="Printemps-été">Printemps-été</option>
+                  </select>
+                  <select
+                    className="select bg-gray-300 select-bordered w-full max-w-xs"
+                    name="type_session"
+                    value={typeSession}
+                    onChange={(e) => setTypeSession(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Type session
+                    </option>
+                    <option value="Normale">Normale</option>
+                    <option value="Rattrapage">Rattrapage</option>
+                  </select>
+                  <div className="mt-4 mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date début :</label>
+                    <input
+                      type="date"
+                      className="input bg-gray-300 w-full max-w-xs"
+                      name="datedebut"
+                      value={dateDebut}
+                      onChange={(e) => setDateDebut(e.target.value)}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date fin :</label>
+                    <input
+                      type="date"
+                      className="input bg-gray-300 w-full max-w-xs"
+                      name="datefin"
+                      value={dateFin}
+                      onChange={(e) => setDateFin(e.target.value)}
+                    />
+                  </div>
+                  <div className="modal-action grid grid-cols-3 gap-4 items-center">
+                    <button type="submit" className="w-full p-3 rounded-md bg-blue-600 text-black hover:bg-blue-700 focus:outline-none">
+                      Confirmer
+                    </button>
+                    <button
+                      type="button"
+                      className="btn float-right text-black bg-red-400 border-none hover:bg-red-500"
+                      onClick={() => setModalOpen(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           )}
@@ -152,8 +150,8 @@ const HistoriqueSessions = () => {
           </tr>
         </thead>
         <tbody>
-          {sessions.map((session, index) => (
-            <tr key={index}>
+          {sessions.map((session, id_session) => (
+            <tr key={id_session}>
               <td>{session.nom_session}</td>
               <td>{session.type_session}</td>
               <td>{session.datedebut}</td>

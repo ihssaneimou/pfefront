@@ -8,41 +8,43 @@ const Surveillants = () => {
   const [currentId, setCurrentId] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/surveillant")
-      .then((response) => {
-        setSurveillants(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching surveillants", error);
-      });
+    fetchSurveillants();
   }, []);
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    const newSurveillant = {
-      nomComplet_s: nomComplet,
-      id_departement: idDepartement,
-    };
-
+  const fetchSurveillants = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/api/surveillant/create", newSurveillant);
-      setSurveillants([...surveillants, response.data]);
+      const response = await axios.get("http://localhost:8000/api/surveillant");
+      setSurveillants(response.data);
+    } catch (error) {
+      console.error("Error fetching surveillants", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/surveillant/create",
+        {
+          nomComplet_s: nomComplet,
+          id_departement: idDepartement,
+        }
+      );
       alert("Surveillant ajouté avec succès!");
-      document.getElementById("my_modal_1").close();
-      // Reset form fields
+      setSurveillants([...surveillants, response.data]); // Update state with the new surveillant
       setNomComplet("");
       setIdDepartement("");
+      document.getElementById("my_modal_1").close(); // Close the modal on success
     } catch (error) {
-      console.error("Erreur lors de l'ajout du surveillant", error);
-      alert("Erreur lors de l'ajout du surveillant");
+      console.error("Erreur lors de l’ajout du surveillant", error);
+      alert("Erreur lors de l’ajout du surveillant");
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/surveillant/${id}`);
-      setSurveillants(surveillants.filter(s => s.id !== id));
+      setSurveillants(surveillants.filter(s => s.id_surveillant !== id)); // Update state by filtering out the deleted surveillant
       alert("Surveillant supprimé avec succès!");
     } catch (error) {
       console.error("Erreur lors de la suppression du surveillant", error);
@@ -92,7 +94,7 @@ const Surveillants = () => {
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box bg-gray-200">
               <h3 className="font-bold text-lg mb-4">Ajouter un surveillant</h3>
-              <form onSubmit={handleAdd}>
+              <form onSubmit={handleSubmit}>
                 <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
                   <input
                     type="text"
@@ -135,7 +137,7 @@ const Surveillants = () => {
 
       <table className="table lg:w-[70vw] w-full">
         <thead>
-          <tr className="text-slate-700">
+          <tr className="">
             <th>Nom Complet</th>
             <th>ID departement</th>
             <th>Action</th>
@@ -143,7 +145,7 @@ const Surveillants = () => {
         </thead>
         <tbody>
           {surveillants.map((surveillant) => (
-            <tr className="hover cursor-pointer" key={surveillant.id_surveillant}>
+            <tr className=" cursor-pointer" key={surveillant.id_surveillant}>
               <td>{surveillant.nomComplet_s}</td>
               <td>{surveillant.id_departement}</td>
               <th>
