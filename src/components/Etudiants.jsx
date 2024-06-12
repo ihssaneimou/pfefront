@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useToken } from "../App";
 
 const Etudiants = () => {
   const [etudiants, setEtudiants] = useState([]);
@@ -8,12 +9,22 @@ const Etudiants = () => {
   const [prenom, setPrenom] = useState("");
   const [codeApogee, setCodeApogee] = useState("");
   const [CNE, setCNE] = useState("");
+  const [photo, setPhoto] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modules, setModules] = useState([]);
+
+  const { token } = useToken();
 
   useEffect(() => {
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
     axios
-      .get("http://localhost:8000/api/etudiant")
+      .get("http://localhost:8000/api/etudiant", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
         setEtudiants(response.data);
         setFilteredEtudiants(response.data);
@@ -21,7 +32,18 @@ const Etudiants = () => {
       .catch((error) => {
         console.error("There was an error fetching the etudiants", error);
       });
-  }, []);
+
+    axios
+      .get("http://localhost:8000/api/module", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setModules(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the modules", error);
+      });
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +55,20 @@ const Etudiants = () => {
           prenom_etudiant: prenom,
           codeApogee: codeApogee,
           CNE: CNE,
-          photo: "default-url",
-        }
+          photo: photo,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Étudiant ajouté avec succès!");
-      setEtudiants([...etudiants, response.data]); // Update etudiants state with the new student
-      setFilteredEtudiants([...etudiants, response.data]);
-      setModalOpen(false); // Close the modal on success
+      const newEtudiant = response.data;
+      setEtudiants([...etudiants, newEtudiant]);
+      setFilteredEtudiants([...etudiants, newEtudiant]);
+      document.getElementById("my_modal_1").close();
+      setNom("");
+      setPrenom("");
+      setCodeApogee("");
+      setCNE("");
+      setPhoto("");
     } catch (error) {
       console.error("Erreur lors de l’ajout de l’étudiant", error);
       alert("Erreur lors de l’ajout de l’étudiant");
@@ -48,8 +77,12 @@ const Etudiants = () => {
 
   const handleDelete = async (codeApogee) => {
     try {
-      await axios.delete(`http://localhost:8000/api/etudiant/${codeApogee}`);
-      const updatedEtudiants = etudiants.filter((etudiant) => etudiant.codeApogee !== codeApogee);
+      await axios.delete(`http://localhost:8000/api/etudiant/${codeApogee}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const updatedEtudiants = etudiants.filter(
+        (etudiant) => etudiant.codeApogee !== codeApogee
+      );
       setEtudiants(updatedEtudiants);
       setFilteredEtudiants(updatedEtudiants);
       alert("Étudiant supprimé avec succès!");
@@ -61,34 +94,69 @@ const Etudiants = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const filtered = etudiants.filter((etudiant) => {
-      return (
-        etudiant.nom_etudiant.toLowerCase().includes(query.toLowerCase()) ||
-        etudiant.prenom_etudiant.toLowerCase().includes(query.toLowerCase()) ||
-        etudiant.codeApogee.toLowerCase().includes(query.toLowerCase()) ||
-        etudiant.CNE.toLowerCase().includes(query.toLowerCase())
+    if (!query) {
+      setFilteredEtudiants(etudiants);
+    } else {
+      const filtered = etudiants.filter(
+        (etudiant) =>
+          etudiant.nom_etudiant.toLowerCase().includes(query.toLowerCase()) ||
+          etudiant.prenom_etudiant
+            .toLowerCase()
+            .includes(query.toLowerCase()) ||
+          etudiant.CNE.toLowerCase().includes(query.toLowerCase())
       );
-    });
-    setFilteredEtudiants(filtered);
+      console.log(filtered); // Debug: Log the filtered results
+      setFilteredEtudiants(filtered);
+    }
   };
 
   return (
-    <div className="overflow-x-auto">
-      <div className="w-full flex mb-4">
-        <select className="mx-auto select select-bordered w-full max-w-xs bg-gray-300">
-          <option disabled selected>
-            Selectionner le code module
+    <div className="overflow-x-auto p-4">
+      <div className="w-full flex mb-4 items-center">
+        <select
+          className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
+          value={codeApogee}
+          onChange={(e) => setCodeApogee(e.target.value)}
+        >
+          <option disabled value="">
+            Selectionner le code du module
           </option>
-          <option>M01</option>
-          <option>M02</option>
+          {modules.map((module) => (
+            <option key={module.code_module} value={module.code_module}>
+              {module.intitule_module}
+            </option>
+          ))}
         </select>
+        <button
+          type="submit"
+          className="ml-4 flex items-center px-3 py-2 bg-green-200 rounded-md text-green-700"
+          onClick={() => handleSearch(searchQuery)}
+        >
+          <svg
+            className="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth="2"
+              d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+            />
+          </svg>
+          <span className="ml-1">Rechercher</span>
+        </button>
       </div>
-      <div className="grid grid-cols-3 gap-4 items-center">
+      <div className="grid grid-cols-3 gap-4 items-center mb-4">
         <div>
-          <h1 className="text-xl mb-4 mr-10">Liste des etudiants</h1>
+          <h1 className="text-xl mb-4">Liste des etudiants</h1>
         </div>
         <div>
-          <label className="input bg-gray-300 input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex bg-gray-300 items-center gap-2">
             <input
               type="text"
               className="grow"
@@ -110,74 +178,81 @@ const Etudiants = () => {
             </svg>
           </label>
         </div>
-        <div className="flex">
+        <div className="flex justify-end">
           <button
-            className="btn mx-auto w-[60%] p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-            onClick={() => setModalOpen(true)}
+            className="btn mx-auto w-48 p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+            onClick={() => document.getElementById("my_modal_1").showModal()}
           >
             Ajouter Etudiant
           </button>
-          {modalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="modal-box bg-gray-200">
-                <h3 className="font-bold text-lg mb-4">Ajouter un étudiant</h3>
-                <form onSubmit={handleSubmit}>
-                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                    <input
-                      type="text"
-                      className="grow"
-                      placeholder="Nom"
-                      value={nom}
-                      onChange={(e) => setNom(e.target.value)}
-                    />
-                  </label>
-                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                    <input
-                      type="text"
-                      className="grow"
-                      placeholder="Prénom"
-                      value={prenom}
-                      onChange={(e) => setPrenom(e.target.value)}
-                    />
-                  </label>
-                  <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                    <input
-                      type="text"
-                      className="grow"
-                      placeholder="Code Apogee"
-                      value={codeApogee}
-                      onChange={(e) => setCodeApogee(e.target.value)}
-                    />
-                  </label>
-                  <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-                    <input
-                      type="text"
-                      className="grow"
-                      placeholder="CNE"
-                      value={CNE}
-                      onChange={(e) => setCNE(e.target.value)}
-                    />
-                  </label>
-                  <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                    <button
-                      type="submit"
-                      className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                    >
-                      Confirmer
-                    </button>
-                    <div></div>
-                    <button
-                      type="button"
-                      className="btn float-right text-white bg-red-400 border-none hover:bg-red-500"
-                      onClick={() => setModalOpen(false)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </form>
-              </div>
+          <dialog id="my_modal_1" className="modal">
+            <div className="modal-box bg-gray-200">
+              <h3 className="font-bold text-lg mb-4">Ajouter un étudiant</h3>
+              <form onSubmit={handleSubmit}>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Nom"
+                    value={nom}
+                    onChange={(e) => setNom(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Prénom"
+                    value={prenom}
+                    onChange={(e) => setPrenom(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Code Apogee"
+                    value={codeApogee}
+                    onChange={(e) => setCodeApogee(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="CNE"
+                    value={CNE}
+                    onChange={(e) => setCNE(e.target.value)}
+                  />
+                </label>
+                <label className="input bg-gray-300 input-bordered flex items-center gap-2">
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Photo URL"
+                    value={photo}
+                    onChange={(e) => setPhoto(e.target.value)}
+                  />
+                </label>
+                <div className="modal-action grid grid-cols-3 gap-4 items-center">
+                  <button
+                    type="submit"
+                    className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                  >
+                    Confirmer
+                  </button>
+                  <div></div>
+                  <button
+                    type="button"
+                    className="btn text-white bg-red-400 border-none hover:bg-red-500"
+                    onClick={() => document.getElementById("my_modal_1").close()}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
             </div>
-          )}
+          </dialog>
         </div>
       </div>
 
@@ -211,17 +286,7 @@ const Etudiants = () => {
                   className="btn btn-ghost btn-xs"
                   onClick={() => handleDelete(etudiant.codeApogee)}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-person-x"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                  </svg>
+                  Delete
                 </button>
               </td>
             </tr>

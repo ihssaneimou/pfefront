@@ -1,16 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Make sure to install axios
+import { useToken } from "../App";
 
 const Repartitions = () => {
   const [date, setDate] = useState("");
   const [local, setLocal] = useState("");
   const [demiJournee, setDemiJournee] = useState("");
   const [showTabs, setShowTabs] = useState(false);
+  const [students, setStudents] = useState([]); // New state for storing locals
+  const [surveillants, setSurveillants] = useState([]); // New state for storing locals
+  const [locals, setLocals] = useState([]); // New state for storing locals
+  const { token, setToken } = useToken();
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+    
+    // Fetch locals data
+    const fetchLocals = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/local", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setLocals(response.data);
+      } catch (error) {
+        console.error("Error fetching locals", error);
+      }
+    };
+
+    fetchLocals();
+  }, [token]);
+
+  const handleSubmit = async (event) => {
+    const data = {
+      "date": date,
+      "id_local": local,
+      "demi_journee": demiJournee
+    };
+
     event.preventDefault();
-    console.log("Form submitted:", { date, local, demiJournee });
-    setShowTabs(true);
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      // Fetch students data
+      
+      const studentResponse = await axios.post(
+        "http://127.0.0.1:8000/api/etudiants-examen",
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log(studentResponse.data.data);  // Check the raw response format
+      console.log(Array.isArray(studentResponse.data));  // Verify it's an array
+      setStudents(studentResponse.data.data);
+
+      // Fetch surveillants data
+      const surveillantResponse = await axios.post(
+        "http://127.0.0.1:8000/api/surveillants-examen",
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log(surveillantResponse.data);
+      setSurveillants(surveillantResponse.data.data);
+
+      setShowTabs(true);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
   };
+
 
   const displayTabs = () => {
     return (
@@ -57,34 +120,22 @@ const Repartitions = () => {
                 <tr className="text-slate-700">
                   <th>Nom</th>
                   <th>Prenom</th>
+                  <th>CNE</th>
                   <th>Code apogee</th>
                   <th>Numero d'exam</th>
-                  <th>Module</th>
                 </tr>
               </thead>
               <tbody>
                 {/* row 1 */}
-                <tr className=" cursor-pointer">
-                  <td>Nisrin</td>
-                  <td>ELAKROUD</td>
-                  <td>216673937</td>
-                  <td>1</td>
-                  <td>M01</td>
-                </tr>
-                <tr className=" cursor-pointer">
-                  <td>Nisrin</td>
-                  <td>ELAKROUD</td>
-                  <td>216673937</td>
-                  <td>1</td>
-                  <td>M01</td>
-                </tr>
-                <tr className=" cursor-pointer">
-                  <td>Nisrin</td>
-                  <td>ELAKROUD</td>
-                  <td>216673937</td>
-                  <td>1</td>
-                  <td>M01</td>
-                </tr>
+                {students.map((student) => (
+                  <tr key={student.codeApogee} className="cursor-pointer">
+                    <td>{student.nom_etudiant}</td>
+                    <td>{student.prenom_etudiant}</td>
+                    <td>{student.CNE}</td>
+                    <td>{student.codeApogee}</td>
+                    <td>{student.num_exam}</td>
+                  </tr>
+                ))}
               </tbody>
 
               <tfoot>
@@ -93,10 +144,6 @@ const Repartitions = () => {
                   <th></th>
                   <th></th>
                   <th></th>
-                  <th>
-                    <label htmlFor="date">Date Expiration : </label>
-                    <input type="date" />
-                  </th>
                 </tr>
               </tfoot>
             </table>
@@ -142,38 +189,24 @@ const Repartitions = () => {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Nom</th>
-                  <th>Prenom</th>
-                  <th>Num d'immatriculation</th>
+                  <th>Nom Complet</th>
+                  <th>ID departement</th>
                 </tr>
               </thead>
               <tbody>
                 {/* row 1 */}
-                <tr className="hover cursor-pointer">
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                </tr>
-                <tr className="hover cursor-pointer">
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                </tr>
-                <tr className="hover cursor-pointer">
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                  <td>XXXXXX</td>
-                </tr>
+                {surveillants.map((surveillant) => (
+                  <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
+                    <td>{surveillant.nomComplet_s}</td>
+                    <td>{surveillant.id_departement}</td>
+                  </tr>
+                ))}
               </tbody>
 
               <tfoot>
                 <tr>
                   <th></th>
-                  <th></th>
-                  <th>
-                    <label htmlFor="date">Date Expiration : </label>
-                    <input type="date" />
-                  </th>
+                  <th> </th>
                 </tr>
               </tfoot>
             </table>
@@ -211,8 +244,11 @@ const Repartitions = () => {
             <option disabled value="">
               Selectionner le local
             </option>
-            <option>Option 1</option>
-            <option>Option 2</option>
+            {locals.map((loc) => (
+              <option key={loc.id_local} value={loc.id_local}>
+                {loc.num_local}
+              </option>
+            ))}
           </select>
         </div>
         <div className="w-full flex mb-4">
@@ -224,8 +260,8 @@ const Repartitions = () => {
             <option disabled value="">
               Selectionner la demi-journée
             </option>
-            <option>Option 1</option>
-            <option>Option 2</option>
+            <option>AM</option>
+            <option>PM</option>
           </select>
         </div>
         <button

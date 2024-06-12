@@ -22,6 +22,7 @@ const LoginForm = () => {
       });
 
       const accessToken = response.data.access_token;
+      console.log(response.data.access_token);
       setToken(accessToken);
       localStorage.setItem("token", accessToken);
 

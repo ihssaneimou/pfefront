@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useToken } from "../App";
 
 const Pvs = () => {
   const [date, setDate] = useState("");
   const [local, setLocal] = useState("");
   const [demiJournee, setDemiJournee] = useState("");
   const [showTabs, setShowTabs] = useState(false);
+  const { token, setToken } = useToken();
+
+  useEffect(() => {
+    
+    if (!token) {
+      alert("No token found. Please log in.");
+   
+    }
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
+    if (!token) {
+      alert("No token found. Please log in.");
+   
+      return;
+    }
     console.log("Form submitted:", { date, local, demiJournee });
     setShowTabs(true);
   };

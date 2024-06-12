@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../assets/fsac.png";
 import axios from "axios";
-import { useToken } from "../App";
+import { useToken } from "../App"; // Assuming useToken is defined and provides token management
 
 const Navbar = () => {
   const { token, setToken } = useToken();
@@ -29,7 +29,7 @@ const Navbar = () => {
       console.log("Logout response:", response.data); // Log the response from the server
 
       // Remove the token from both localStorage and context state
-      localStorage.removeItem("token");
+      
       setToken(null);
 
       // Redirect to the login page

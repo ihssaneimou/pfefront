@@ -57,7 +57,7 @@ const TablettesAssociees = () => {
     <div className="overflow-x-auto">
       <div className="grid grid-cols-3 gap-4 items-center">
         <div>
-          <h1 className="text-xl mb-4 mr-10">Les demandes d'associations</h1>
+          <h1 className="text-xl mb-4 mr-10">Les appareils dissociees</h1>
         </div>
         <div></div>
         <div>
@@ -84,26 +84,22 @@ const TablettesAssociees = () => {
           <tr className="text-slate-700">
             <th>Device ID</th>
             <th>Statut</th>
+            <th>Code Association</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {tabletteData.map((tablette) =>{if(tablette.statut=='non asocier') {return(
+          {tabletteData.map((tablette) =>{if(tablette.statut=='bloquer') {return(
             <tr className="cursor-pointer" key={tablette.device_id}>
               <td>{tablette.device_id}</td>
               <td>{tablette.statut}</td>
+              <td>{tablette.code_association}</td>
               <td className="flex gap-4">
                 <button
-                  className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none"
+                  className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
                   onClick={() => handleDelete(tablette.device_id)}
                 >
-                  Accepter
-                </button>
-                <button
-                  className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                  onClick={() => document.getElementById("my_modal_1").showModal()}
-                >
-                  Refuser
+                  Reassocier
                 </button>
               </td>
             </tr>

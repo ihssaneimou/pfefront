@@ -39,6 +39,9 @@ function App() {
           <Route path="/session/listesurveillant" element={<Listesurveillants />} />
           <Route path="/repartitions" element={<Repartitions />} />
           <Route path="/tablettesassociees" element={<Tablettes />} />
+          <Route path="/tablettesbloquees" element={<Tablettes />} />
+          <Route path="/tablettesnonassociees" element={<Tablettes />} />
+          <Route path="/tablettesnonassociees" element={<Tablettes />} />
           <Route path="/demandesassociation" element={<Demandes />} />
           <Route path="/pvs" element={<Pvs />} />
         </Routes>
