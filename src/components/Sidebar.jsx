@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TimeLine from "./TimeLine";
 import HistoriqueSessions from "./HistoriqueSessions";
 import Etudiants from "./Etudiants";
 import Surveillants from "./Surveillants";
-import Repartitions from "./Repartitions.jsx";
-import TablettesAssociees from "./TablettesAssociees.jsx";
-import TablettesRefusees from "./TablettesRefusees.jsx";
-import TablettesNonAssociees from "./TablettesNonAssociees.jsx";
-import DemandesAssociation from "./DemandesAssociation.jsx";
-import Pvs from "./Pvs.jsx";
+import Repartitions from "./Repartitions";
+import TablettesAssociees from "./TablettesAssociees";
+import TablettesRefusees from "./TablettesRefusees";
+import TablettesNonAssociees from "./TablettesNonAssociees";
+import DemandesAssociation from "./DemandesAssociation";
+import Pvs from "./Pvs";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -31,6 +31,11 @@ import {
 } from "@mui/icons-material";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
+  const [openTablette, setOpenTablette] = useState(false);
+
   const logAction = (action) => {
     axios.post('http://localhost:8000/api/log-action', { action })
       .then(response => {
@@ -49,13 +54,10 @@ const Sidebar = () => {
     setOpenTablette(!openTablette);
   };
 
-  const handleButtonClick = (text) => {
-    handleAction(`Clicked on ${text}`);
+  const handleButtonClick = (path, text) => {
+    logAction(`Clicked on ${text}`);
+    navigate(path);
   };
-
-  const [open, setOpen] = useState(false);
-  const [openTablette, setOpenTablette] = useState(false);
-  const location = useLocation();
 
   const renderContent = () => {
     switch (location.pathname) {
@@ -94,7 +96,7 @@ const Sidebar = () => {
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
-          className="drawer-overlay "
+          className="drawer-overlay"
         ></label>
         <List
           sx={{ width: "100%", maxWidth: 360 }}
@@ -102,19 +104,19 @@ const Sidebar = () => {
           aria-labelledby="nested-list-subheader"
           className="bg-gray-100"
         >
-          <ListItemButton href="/home" onClick={() => handleButtonClick("Home")}>
+          <ListItemButton onClick={() => handleButtonClick("/home", "Home")}>
             <ListItemIcon>
               <HomeSharp />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItemButton>
-          <ListItemButton href="/session" onClick={() => handleButtonClick("Session")}>
+          <ListItemButton onClick={() => handleButtonClick("/session", "Session")}>
             <ListItemIcon>
               <Timelapse />
             </ListItemIcon>
             <ListItemText primary="Session" />
           </ListItemButton>
-          <ListItemButton onClick={() => { handleClick(); handleButtonClick("Les listes") }}>
+          <ListItemButton onClick={() => { handleClick(); logAction("Clicked on Les listes") }}>
             <ListItemIcon>
               <ListAltSharp />
             </ListItemIcon>
@@ -123,13 +125,13 @@ const Sidebar = () => {
           </ListItemButton>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }} href="/session/listeetudiant" onClick={() => handleButtonClick("Etudiants")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/session/listeetudiant", "Etudiants")}>
                 <ListItemIcon>
                   <Person />
                 </ListItemIcon>
                 <ListItemText primary="Etudiants" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} href="/session/listesurveillant" onClick={() => handleButtonClick("Surveillants")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/session/listesurveillant", "Surveillants")}>
                 <ListItemIcon>
                   <Person />
                 </ListItemIcon>
@@ -137,13 +139,13 @@ const Sidebar = () => {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton href="/repartitions" onClick={() => handleButtonClick("Repartitions")}>
+          <ListItemButton onClick={() => handleButtonClick("/repartitions", "Repartitions")}>
             <ListItemIcon>
               <Article />
             </ListItemIcon>
             <ListItemText primary="Repartitions" />
           </ListItemButton>
-          <ListItemButton onClick={() => { handleClickTablette(); handleButtonClick("Gestion tablettes") }}>
+          <ListItemButton onClick={() => { handleClickTablette(); logAction("Clicked on Gestion tablettes") }}>
             <ListItemIcon>
               <FileCopy />
             </ListItemIcon>
@@ -152,25 +154,25 @@ const Sidebar = () => {
           </ListItemButton>
           <Collapse in={openTablette} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }} href="/demandesassociation" onClick={() => handleButtonClick("Demandes d'associations")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/demandesassociation", "Demandes d'associations")}>
                 <ListItemIcon>
                   <FilePresent />
                 </ListItemIcon>
                 <ListItemText primary="Demandes d'associations" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} href="/tablettesassociees" onClick={() => handleButtonClick("Tablettes associees")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesassociees", "Tablettes associees")}>
                 <ListItemIcon>
                   <FileOpen />
                 </ListItemIcon>
                 <ListItemText primary="Tablettes associees" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} href="/tablettesnonassociees" onClick={() => handleButtonClick("Tablettes dissociees")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesnonassociees", "Tablettes dissociees")}>
                 <ListItemIcon>
                   <FileOpen />
                 </ListItemIcon>
                 <ListItemText primary="Tablettes dissociees" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} href="/tablettesrefusees" onClick={() => handleButtonClick("Tablettes refusees")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesrefusees", "Tablettes refusees")}>
                 <ListItemIcon>
                   <FileOpen />
                 </ListItemIcon>
@@ -178,16 +180,13 @@ const Sidebar = () => {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton href="/pvs" onClick={() => handleButtonClick("Les PVs")}>
+          <ListItemButton onClick={() => handleButtonClick("/pvs", "Les PVs")}>
             <ListItemIcon>
               <DocumentScannerSharp />
             </ListItemIcon>
             <ListItemText primary="Les PVs" />
           </ListItemButton>
         </List>
-      </div>
-      <div>
-        <button onClick={() => logAction('Button Clicked')}>Click Me</button>
       </div>
     </div>
   );

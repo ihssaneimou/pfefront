@@ -113,43 +113,6 @@ const Etudiants = () => {
   return (
     <div className="overflow-x-auto p-4">
       <div className="w-full flex mb-4 items-center">
-        <select
-          className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
-          value={codeApogee}
-          onChange={(e) => setCodeApogee(e.target.value)}
-        >
-          <option disabled value="">
-            Selectionner le code du module
-          </option>
-          {modules.map((module) => (
-            <option key={module.code_module} value={module.code_module}>
-              {module.intitule_module}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          className="ml-4 flex items-center px-3 py-2 bg-green-200 rounded-md text-green-700"
-          onClick={() => handleSearch(searchQuery)}
-        >
-          <svg
-            className="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-              d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-            />
-          </svg>
-          <span className="ml-1">Rechercher</span>
-        </button>
       </div>
       <div className="grid grid-cols-3 gap-4 items-center mb-4">
         <div>

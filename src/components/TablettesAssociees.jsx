@@ -120,10 +120,9 @@ const TablettesAssociees = () => {
                           onChange={(e) => setTablette(e.target.value)}
                         >
                           <option disabled value="">
-                            Selectionner la tablette
+                            Selectionner le local
                           </option>
                           <option>Option 1</option>
-                          <option>Option 2</option>
                         </select>
                       </div>
                       <div className="w-full flex mb-4">
@@ -152,6 +151,7 @@ const TablettesAssociees = () => {
                         <button
                           type="submit"
                           className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                          
                         >
                           Confirmer
                         </button>

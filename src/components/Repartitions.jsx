@@ -11,6 +11,8 @@ const Repartitions = () => {
   const [surveillants, setSurveillants] = useState([]); // New state for storing locals
   const [locals, setLocals] = useState([]); // New state for storing locals
   const { token, setToken } = useToken();
+  const [activeTab, setActiveTab] = useState('Repartition etudiant'); // Default active tab
+
 
   useEffect(() => {
     if (!token) {
@@ -45,8 +47,8 @@ const Repartitions = () => {
     if (!token) {
       alert("No token found. Please log in.");
       return;
-    }
-
+    }  
+    console.log(data)
     try {
       // Fetch students data
       
@@ -55,9 +57,10 @@ const Repartitions = () => {
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log(studentResponse.data.data);  // Check the raw response format
-      console.log(Array.isArray(studentResponse.data));  // Verify it's an array
-      setStudents(studentResponse.data.data);
+      console.log(studentResponse.data);  // Check the raw response format
+      console.log(Array.isArray(studentResponse.data.data));  // Verify it's an array
+      Array.isArray(studentResponse.data.data) ?setStudents(studentResponse.data.data):setStudents([]);
+      console.log(students)
 
       // Fetch surveillants data
       const surveillantResponse = await axios.post(
@@ -66,7 +69,7 @@ const Repartitions = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log(surveillantResponse.data);
-      setSurveillants(surveillantResponse.data.data);
+      Array.isArray(surveillantResponse.data.data) ?setSurveillants(surveillantResponse.data.data ):setSurveillants([]);
 
       setShowTabs(true);
     } catch (error) {
@@ -84,7 +87,8 @@ const Repartitions = () => {
           role="tab"
           className="tab"
           aria-label="Repartition etudiant"
-          checked
+          checked={activeTab === 'Repartition etudiant'}
+          onChange={() => setActiveTab('Repartition etudiant')}
         />
         <div
           role="tabpanel"
@@ -156,6 +160,8 @@ const Repartitions = () => {
           role="tab"
           className="tab"
           aria-label="Repartition surveillant"
+          checked={activeTab === 'Repartition surveillant'}
+          onChange={() => setActiveTab('Repartition surveillant')}
         />
         <div
           role="tabpanel"
@@ -244,11 +250,11 @@ const Repartitions = () => {
             <option disabled value="">
               Selectionner le local
             </option>
-            {locals.map((loc) => (
+            {locals.map((loc) => {if(loc.num_local!=0) return(
               <option key={loc.id_local} value={loc.id_local}>
                 {loc.num_local}
               </option>
-            ))}
+)})}
           </select>
         </div>
         <div className="w-full flex mb-4">
