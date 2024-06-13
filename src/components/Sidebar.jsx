@@ -7,7 +7,7 @@ import Etudiants from "./Etudiants";
 import Surveillants from "./Surveillants";
 import Repartitions from "./Repartitions.jsx";
 import TablettesAssociees from "./TablettesAssociees.jsx";
-import TablettesBloquees from "./TablettesBloquees.jsx";
+import TablettesRefusees from "./TablettesRefusees.jsx";
 import TablettesNonAssociees from "./TablettesNonAssociees.jsx";
 import DemandesAssociation from "./DemandesAssociation.jsx";
 import Pvs from "./Pvs.jsx";
@@ -73,8 +73,8 @@ const Sidebar = () => {
         return <TablettesAssociees />;
       case "/tablettesnonassociees":
         return <TablettesNonAssociees />;
-      case "/tablettesbloquees":
-        return <TablettesBloquees />;
+      case "/tablettesrefusees":
+        return <TablettesRefusees />;
       case "/demandesassociation":
         return <DemandesAssociation />;
       case "/pvs":
@@ -170,7 +170,7 @@ const Sidebar = () => {
                 </ListItemIcon>
                 <ListItemText primary="Tablettes dissociees" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} href="/tablettesbloquees" onClick={() => handleButtonClick("Tablettes refusees")}>
+              <ListItemButton sx={{ pl: 4 }} href="/tablettesrefusees" onClick={() => handleButtonClick("Tablettes refusees")}>
                 <ListItemIcon>
                   <FileOpen />
                 </ListItemIcon>

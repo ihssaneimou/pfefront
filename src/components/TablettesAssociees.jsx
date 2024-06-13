@@ -10,7 +10,7 @@ const TablettesAssociees = () => {
   const { token, setToken } = useToken();
 
   useEffect(() => {
-    
+
     if (!token) {
       alert("No token found. Please log in.");
 
@@ -30,7 +30,7 @@ const TablettesAssociees = () => {
   }, []);
 
   const handleDelete = async (device_id) => {
-    
+
     try {
       await axios.delete(`http://localhost:8000/api/affectation/delete/${device_id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -44,10 +44,10 @@ const TablettesAssociees = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     if (!token) {
       alert("No token found. Please log in.");
-      
+
       return;
     }
     console.log("Form submitted:", { date, tablette, demiJournee });
@@ -89,7 +89,7 @@ const TablettesAssociees = () => {
           </tr>
         </thead>
         <tbody>
-          {tabletteData.map((tablette) =>{if(tablette.statut=='asocier') {return(
+          {tabletteData.map((tablette) =>{if(tablette.statut=='associer') {return(
             <tr className="cursor-pointer" key={tablette.device_id}>
               <td>{tablette.device_id}</td>
               <td>{tablette.statut}</td>

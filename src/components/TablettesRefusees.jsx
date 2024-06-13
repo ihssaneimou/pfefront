@@ -84,88 +84,13 @@ const TablettesAssociees = () => {
           <tr className="text-slate-700">
             <th>Device ID</th>
             <th>Statut</th>
-            <th>Code Association</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {tabletteData.map((tablette) =>{if(tablette.statut=='refuser') {return(
             <tr className="cursor-pointer" key={tablette.device_id}>
               <td>{tablette.device_id}</td>
-              <td>{tablette.statut}</td>
-              <td>{tablette.code_association}</td>
-              <td className="flex gap-4">
-                <button
-                  className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none"
-                  onClick={() => handleDelete(tablette.device_id)}
-                >
-                  Dissocier
-                </button>
-                <button
-                  className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                  onClick={() => document.getElementById("my_modal_1").showModal()}
-                >
-                  Affecter
-                </button>
-                <dialog id="my_modal_1" className="modal">
-                  <div className="modal-box bg-gray-200">
-                    <form
-                      className="overflow-x-auto mb-4"
-                      onSubmit={handleSubmit}
-                    >
-                      <div className="w-full flex mb-4">
-                        <select
-                          className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
-                          value={tablette}
-                          onChange={(e) => setTablette(e.target.value)}
-                        >
-                          <option disabled value="">
-                            Selectionner la tablette
-                          </option>
-                          <option>Option 1</option>
-                          <option>Option 2</option>
-                        </select>
-                      </div>
-                      <div className="w-full flex mb-4">
-                        <input
-                          id="dateInput"
-                          type="date"
-                          className="mx-auto  bg-gray-300 w-full max-w-xs border border-gray-300 rounded-md p-2"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                        />
-                      </div>
-                      <div className="w-full flex mb-4">
-                        <select
-                          className="mx-auto bg-gray-300 select select-bordered w-full max-w-xs"
-                          value={demiJournee}
-                          onChange={(e) => setDemiJournee(e.target.value)}
-                        >
-                          <option disabled value="">
-                            Selectionner la demi-journée
-                          </option>
-                          <option>Option 1</option>
-                          <option>Option 2</option>
-                        </select>
-                      </div>
-                      <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                        <button
-                          type="submit"
-                          className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                        >
-                          Confirmer
-                        </button>
-                        <div></div>
-                        <form method="dialog">
-                          <button className="btn float-right text-white bg-red-400 border-none hover:bg-red-500">
-                            Close
-                          </button>
-                        </form>
-                      </div>
-                    </form>
-                  </div>
-                </dialog>
-              </td>
+              <td>{tablette.statut}</td>              
             </tr>
           )}})}
         </tbody>

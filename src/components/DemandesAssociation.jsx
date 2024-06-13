@@ -3,9 +3,6 @@ import axios from 'axios';
 import { useToken } from "../App";
 
 const TablettesAssociees = () => {
-  const [date, setDate] = useState("");
-  const [tablette, setTablette] = useState("");
-  const [demiJournee, setDemiJournee] = useState("");
   const [tabletteData, setTabletteData] = useState([]);
   const { token, setToken } = useToken();
 
@@ -88,7 +85,7 @@ const TablettesAssociees = () => {
           </tr>
         </thead>
         <tbody>
-          {tabletteData.map((tablette) =>{if(tablette.statut=='non asocier') {return(
+          {tabletteData.map((tablette) =>{if(tablette.statut=='non associer') {return(
             <tr className="cursor-pointer" key={tablette.device_id}>
               <td>{tablette.device_id}</td>
               <td>{tablette.statut}</td>
@@ -97,13 +94,13 @@ const TablettesAssociees = () => {
                   className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none"
                   onClick={() => handleDelete(tablette.device_id)}
                 >
-                  Accepter
+                  Refuser
                 </button>
                 <button
                   className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
                   onClick={() => document.getElementById("my_modal_1").showModal()}
                 >
-                  Refuser
+                  Accepter
                 </button>
               </td>
             </tr>
