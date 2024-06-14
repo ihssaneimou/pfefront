@@ -9,6 +9,10 @@ const TablettesAssociees = () => {
   const { token } = useToken();
 
   useEffect(() => {
+    fetchTablette();
+  }, [token]);
+
+  const fetchTablette = () => {
     if (!token) {
       alert("No token found. Please log in.");
     } else {
@@ -22,28 +26,21 @@ const TablettesAssociees = () => {
           setFilteredTabletteData(response.data);
         })
         .catch(error => {
-          console.error('Error fetching tablette data:', error); 
+          console.error('Error fetching tablette data:', error);
         });
     }
-  }, [token]);
+  }
 
-  const handleUpdateStatus = async (tablette, newStatus) => {
+  const handleReassocier = async (tablette) => {
     try {
-      await axios.put(`http://localhost:8000/api/tablette/edit/${tablette.id_tablette}`,{
-        "device_id":tablette.device_id ,
-        "statut": newStatus,
-        "code_association": ""
-      }, {
+      const response = await axios.delete(`http://localhost:8000/api/tablette/${tablette.id_tablette}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const updatedTabletteData = tabletteData.map(t =>
-        t.device_id === tablette.device_id ? { ...t, statut: newStatus } : t
-      );
-      setTabletteData(updatedTabletteData);
-      setFilteredTabletteData(updatedTabletteData);
-      alert(`Le statut de la tablette a été mis à jour à ${newStatus} avec succès !`);
+      fetchTablette();
+      console.log(response.data);
+      alert('La tablette a été réassociée avec succès !');
     } catch (error) {
-      console.error(`Une erreur est produite lors de la mise à jour du statut de la tablette à ${newStatus} :`, error);
+      console.error('Une erreur est produite lors de la réassociation de la tablette :', error);
     }
   };
 
@@ -53,7 +50,7 @@ const TablettesAssociees = () => {
       setFilteredTabletteData(tabletteData);
     } else {
       const filtered = tabletteData.filter(tablette =>
-        tablette.device_id.toLowerCase().includes(query.toLowerCase())
+        tablette.device_id.toLowerCase().includes(query.toLowerCase()) && tablette.statut === 'bloquer'
       );
       setFilteredTabletteData(filtered);
     }
@@ -63,7 +60,7 @@ const TablettesAssociees = () => {
     <div className="overflow-x-auto">
       <div className="grid grid-cols-3 gap-4 items-center">
         <div>
-          <h1 className="text-xl mb-4 mr-10">Les demandes d'associations</h1>
+          <h1 className="text-xl mb-4 mr-10">Les appareils bloquées</h1>
         </div>
         <div></div>
         <div>
@@ -101,29 +98,17 @@ const TablettesAssociees = () => {
         </thead>
         <tbody>
           {filteredTabletteData.map((tablette) => {
-            if (tablette.statut === 'non associer') {
+            if (tablette.statut === 'bloquer') {
               return (
-                <tr className="cursor-pointer" key={tablette.id_tablette}>
+                <tr className="cursor-pointer" key={tablette.device_id}>
                   <td>{tablette.device_id}</td>
                   <td>{tablette.statut}</td>
                   <td className="flex gap-4">
                     <button
-                      className="p-3 rounded-md bg-red-500 text-white hover:bg-red-700 focus:outline-none"
-                      onClick={() => handleUpdateStatus(tablette, 'refuser')}
-                    >
-                      Refuser
-                    </button>
-                    <button
                       className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                      onClick={() => handleUpdateStatus(tablette, 'associer')}
+                      onClick={() => handleReassocier(tablette)}
                     >
-                      Accepter
-                    </button>
-                    <button
-                      className="btn p-3 rounded-md bg-black text-white hover:bg-gray-700 focus:outline-none"
-                      onClick={() => handleUpdateStatus(tablette, 'bloquer')}
-                    >
-                      Bloquer
+                      Debloquer
                     </button>
                   </td>
                 </tr>

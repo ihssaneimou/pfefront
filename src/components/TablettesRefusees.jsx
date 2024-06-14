@@ -4,16 +4,15 @@ import { useToken } from "../App";
 
 const TablettesAssociees = () => {
   const [date, setDate] = useState("");
-  const [tablette, setTablette] = useState("");
   const [demiJournee, setDemiJournee] = useState("");
   const [tabletteData, setTabletteData] = useState([]);
-  const { token, setToken } = useToken();
+  const [filteredTabletteData, setFilteredTabletteData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { token } = useToken();
 
   useEffect(() => {
-    
     if (!token) {
       alert("No token found. Please log in.");
-
     } else {
       // Fetch the initial data with token
       axios.get("http://localhost:8000/api/tablette", {
@@ -22,47 +21,43 @@ const TablettesAssociees = () => {
         .then(response => {
           console.log(response.data);
           setTabletteData(response.data);
+          setFilteredTabletteData(response.data);
         })
         .catch(error => {
           console.error('Error fetching tablette data:', error); 
         });
     }
-  }, []);
+  }, [token]);
 
-  const handleDelete = async (device_id) => {
-    
-    try {
-      await axios.delete(`http://localhost:8000/api/affectation/delete/${device_id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setTabletteData(tabletteData.filter(tablette => tablette.device_id !== device_id));
-      alert('La tablette a été dissociée avec succès !');
-    } catch (error) {
-      console.error('Une erreur est produite lors de la suppression de la tablette :', error);
-    }
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    
-    if (!token) {
-      alert("No token found. Please log in.");
-      
-      return;
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (!query) {
+      setFilteredTabletteData(tabletteData);
+    } else {
+      const filtered = tabletteData.filter(tablette =>
+        tablette.device_id.toLowerCase().includes(query.toLowerCase()) && tablette.statut === 'refuser'
+      );
+      setFilteredTabletteData(filtered);
     }
-    console.log("Form submitted:", { date, tablette, demiJournee });
   };
 
   return (
     <div className="overflow-x-auto">
       <div className="grid grid-cols-3 gap-4 items-center">
         <div>
-          <h1 className="text-xl mb-4 mr-10">Les appareils associees</h1>
+          <h1 className="text-xl mb-4 mr-10">Les appareils refusées</h1>
         </div>
         <div></div>
         <div>
           <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-            <input type="text" className="grow" placeholder="Search" />
+            <input
+              type="text"
+              className="grow"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -87,12 +82,17 @@ const TablettesAssociees = () => {
           </tr>
         </thead>
         <tbody>
-          {tabletteData.map((tablette) =>{if(tablette.statut=='refuser') {return(
-            <tr className="cursor-pointer" key={tablette.device_id}>
-              <td>{tablette.device_id}</td>
-              <td>{tablette.statut}</td>              
-            </tr>
-          )}})}
+          {filteredTabletteData.map((tablette) => {
+            if (tablette.statut === 'refuser') {
+              return (
+                <tr className="cursor-pointer" key={tablette.device_id}>
+                  <td>{tablette.device_id}</td>
+                  <td>{tablette.statut}</td>
+                </tr>
+              );
+            }
+            return null;
+          })}
         </tbody>
       </table>
     </div>

@@ -8,7 +8,7 @@ import Surveillants from "./Surveillants";
 import Repartitions from "./Repartitions";
 import TablettesAssociees from "./TablettesAssociees";
 import TablettesRefusees from "./TablettesRefusees";
-import TablettesNonAssociees from "./TablettesNonAssociees";
+import TablettesBloquees from "./TablettesBloquees";
 import DemandesAssociation from "./DemandesAssociation";
 import Pvs from "./Pvs";
 import List from "@mui/material/List";
@@ -73,8 +73,8 @@ const Sidebar = () => {
         return <Repartitions />;
       case "/tablettesassociees":
         return <TablettesAssociees />;
-      case "/tablettesnonassociees":
-        return <TablettesNonAssociees />;
+      case "/tablettesbloquees":
+        return <TablettesBloquees />;
       case "/tablettesrefusees":
         return <TablettesRefusees />;
       case "/demandesassociation":
@@ -166,11 +166,11 @@ const Sidebar = () => {
                 </ListItemIcon>
                 <ListItemText primary="Tablettes associees" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesnonassociees", "Tablettes dissociees")}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesbloquees", "Tablettes bloquees")}>
                 <ListItemIcon>
                   <FileOpen />
                 </ListItemIcon>
-                <ListItemText primary="Tablettes dissociees" />
+                <ListItemText primary="Tablettes bloquees" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesrefusees", "Tablettes refusees")}>
                 <ListItemIcon>

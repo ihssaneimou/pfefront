@@ -9,7 +9,6 @@ const Pvs = () => {
   const [demiJournee, setDemiJournee] = useState("");
   const [seance, setSeance] = useState("");
   const [showTabs, setShowTabs] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("");
   const [etudiantsPS1, setEtudiantsPS1] = useState([]);
   const [etudiantsAS1, setEtudiantsAS1] = useState([]);
   const [etudiantsPS2, setEtudiantsPS2] = useState([]);
@@ -23,7 +22,7 @@ const Pvs = () => {
       alert("No token found. Please log in.");
       return;
     }
-
+    
     // Fetch locals data
     const fetchLocals = async () => {
       try {
@@ -41,7 +40,7 @@ const Pvs = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    
     if (!token) {
       alert("No token found. Please log in.");
       return;
@@ -53,7 +52,7 @@ const Pvs = () => {
         { date, id_local: local, demi_journee: demiJournee },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
+       console.log(response.data)
       setEtudiantsPS1(response.data.etudiantsPS1 || []);
       setEtudiantsAS1(response.data.etudiantsAS1 || []);
       setEtudiantsPS2(response.data.etudiantsPS2 || []);
@@ -67,272 +66,292 @@ const Pvs = () => {
   };
 
   const displayTabs = () => {
-    switch (selectedTab) {
-      case "":
-        return (
-          <div role="tabpanel" className="tab-content bg-slate-200 border-base-300 rounded-box p-6">
-            <div className="overflow-x-auto">
-              <div className="items-center">
-                <h1 className="text-xl text-center mb-4">Etudiants Présents</h1>
-                <div className="flex flex-row">
-                  <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
-                    <div className="card-body">
-                      <p>Module :</p>
-                      <p>Demi jourée :</p>
-                      <p>Local :</p>
-                    </div>
-                  </div>
-                  <div className="w-full max-w-xs">
-                    <select
-                      className="mx-auto bg-gray-300 select select-bordered w-full"
-                      value={seance}
-                      onChange={(e) => setSeance(e.target.value)}
-                    >
-                      <option disabled value="">
-                        Seance
-                      </option>
-                      <option value="S1">Seance 1</option>
-                      <option value="S2">Seance 2</option>
-                    </select>
+    return (
+      <div role="tablist" className="tabs tabs-lifted">
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          className="tab"
+          aria-label="Etudiants Présents"
+          checked
+        />
+        <div
+          role="tabpanel"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+        >
+          <div className="overflow-x-auto">
+            <div className="items-center">
+              <h1 className="text-xl text-center mb-4">Etudiants Présents</h1>
+              <div className="flex flex-row">
+                <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
+                  <div className="card-body">
+                    <p>Module :</p>
+                    <p>Demi jourée :</p>
+                    <p>Local :</p>
                   </div>
                 </div>
-                <div className="flex">
-                  <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Search" />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="w-4 h-4 opacity-70"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </label>
+                <div className="w-full max-w-xs">
+                  <select
+                    className="mx-auto bg-gray-300 select select-bordered w-full"
+                    value={seance}
+                    onChange={(e) => setSeance(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Seance
+                    </option>
+                    <option value="S1">Seance 1</option>
+                    <option value="S2">Seance 2</option>
+                  </select>
                 </div>
               </div>
-              <table className="table m-auto w-4/5">
-                <thead>
-                  <tr className="text-slate-700">
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Code apogee</th>
-                    <th>CNE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {seance === "S1" &&
-                    etudiantsPS1.map((etudiant) => (
-                      <tr key={etudiant.codeApogee} className="cursor-pointer">
-                        <td>{etudiant.nom_etudiant}</td>
-                        <td>{etudiant.prenom_etudiant}</td>
-                        <td>{etudiant.codeApogee}</td>
-                        <td>{etudiant.CNE}</td>
-                      </tr>
-                    ))}
-                  {seance === "S2" &&
-                    etudiantsPS2.map((etudiant) => (
-                      <tr key={etudiant.codeApogee} className="cursor-pointer">
-                        <td>{etudiant.nom_etudiant}</td>
-                        <td>{etudiant.prenom_etudiant}</td>
-                        <td>{etudiant.codeApogee}</td>
-                        <td>{etudiant.CNE}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      case "etudiantsAbsents":
-        return (
-          <div role="tabpanel" className="tab-content bg-slate-200 border-base-300 rounded-box p-6">
-            <div className="overflow-x-auto">
-              <div className="items-center">
-                <h1 className="text-xl text-center mb-4">Etudiants Absents</h1>
-                <div className="flex flex-row">
-                  <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
-                    <div className="card-body">
-                      <p>Module :</p>
-                      <p>Demi jourée :</p>
-                      <p>Local :</p>
-                    </div>
-                  </div>
-                  <div className="w-full max-w-xs">
-                    <select
-                      className="mx-auto bg-gray-300 select select-bordered w-full"
-                      value={seance}
-                      onChange={(e) => setSeance(e.target.value)}
-                    >
-                      <option disabled value="">
-                        Seance
-                      </option>
-                      <option value="S1">Seance 1</option>
-                      <option value="S2">Seance 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex">
-                  <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Search" />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="w-4 h-4 opacity-70"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </label>
-                </div>
-              </div>
-              <table className="table m-auto w-4/5">
-                <thead>
-                  <tr className="text-slate-700">
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Code apogee</th>
-                    <th>CNE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {seance === "S1" &&
-                    etudiantsAS1.map((etudiant) => (
-                      <tr key={etudiant.codeApogee} className="cursor-pointer">
-                        <td>{etudiant.nom_etudiant}</td>
-                        <td>{etudiant.prenom_etudiant}</td>
-                        <td>{etudiant.codeApogee}</td>
-                        <td>{etudiant.CNE}</td>
-                      </tr>
-                    ))}
-                  {seance === "S2" &&
-                    etudiantsAS2.map((etudiant) => (
-                      <tr key={etudiant.codeApogee} className="cursor-pointer">
-                        <td>{etudiant.nom_etudiant}</td>
-                        <td>{etudiant.prenom_etudiant}</td>
-                        <td>{etudiant.codeApogee}</td>
-                        <td>{etudiant.CNE}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      case "rapports":
-        return (
-          <div role="tabpanel" className="tab-content bg-slate-200 border-base-300 rounded-box p-6">
-            <div className="flex flex-row">
-              <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
-                <div className="card-body">
-                  <p>Module :</p>
-                  <p>Demi jourée :</p>
-                  <p>Local :</p>
-                </div>
-              </div>
-              <div className="w-full max-w-xs">
-                <select
-                  className="mx-auto bg-gray-300 select select-bordered w-full"
-                  value={local}
-                  onChange={(e) => setLocal(e.target.value)}
-                >
-                  <option disabled value="">
-                    Selectionner le local
-                  </option>
-                  <option value="S1">Seance 1</option>
-                  <option value="S2">Seance 2</option>
-                </select>
+              <div className="flex">
+                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
+                  <input type="text" className="grow" placeholder="Search" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </label>
               </div>
             </div>
-            <div className="flex flex-row flex-wrap justify-around content-around">
-              {rapport.map((rapport, index) => (
-                <div key={index} className="content-center">
-                  <p>{rapport.titre_rapport}</p>
-                  <p>{rapport.contenu}</p>
-                  <p>{rapport.nom_etudiant}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      case "surveillants":
-        return (
-          <div role="tabpanel" className="tab-content bg-slate-200 border-base-300 rounded-box p-6">
-            <div className="overflow-x-auto">
-              <div className="items-center">
-                <h1 className="text-xl text-center mb-4">Surveillants</h1>
-                <div className="flex flex-row">
-                  <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
-                    <div className="card-body">
-                      <p>Module :</p>
-                      <p>Demi jourée :</p>
-                      <p>Local :</p>
-                    </div>
-                  </div>
-                  <div className="w-full max-w-xs">
-                    <select
-                      className="mx-auto bg-gray-300 select select-bordered w-full"
-                      value={local}
-                      onChange={(e) => setLocal(e.target.value)}
-                    >
-                      <option disabled value="">
-                        Seance
-                      </option>
-                      <option value="S1">Seance 1</option>
-                      <option value="S2">Seance 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="flex">
-                  <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                    <input type="text" className="grow" placeholder="Search" />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="w-4 h-4 opacity-70"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </label>
-                </div>
-              </div>
-              <table className="table m-auto w-4/5">
-                <thead>
-                  <tr className="text-slate-700">
-                    <th>Nom Complet</th>
-                    <th>ID departement</th>
-                    <th>Signature</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {surveillants.map((surveillant) => (
-                    <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
-                      <td>{surveillant.nomComplet_s}</td>
-                      <td>{surveillant.id_departement}</td>
-                      <td>{surveillant.num}</td>
-                      <td></td>
+            <table className="table m-auto w-4/5">
+              <thead>
+                <tr className="text-slate-700">
+                  <th>Nom</th>
+                  <th>Prenom</th>
+                  <th>Code apogee</th>
+                  <th>CNE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seance === "S1" &&
+                  etudiantsPS1.map((etudiant) => (
+                    <tr key={etudiant.codeApogee} className="cursor-pointer">
+                      <td>{etudiant.nom_etudiant}</td>
+                      <td>{etudiant.prenom_etudiant}</td>
+                      <td>{etudiant.codeApogee}</td>
+                      <td>{etudiant.CNE}</td>
                     </tr>
                   ))}
-                </tbody>
-              </table>
+                {seance === "S2" &&
+                  etudiantsPS2.map((etudiant) => (
+                    <tr key={etudiant.codeApogee} className="cursor-pointer">
+                      <td>{etudiant.nom_etudiant}</td>
+                      <td>{etudiant.prenom_etudiant}</td>
+                      <td>{etudiant.codeApogee}</td>
+                      <td>{etudiant.CNE}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          className="tab"
+          aria-label="Etudiants Absents"
+        />
+        <div
+          role="tabpanel"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+        >
+          <div className="overflow-x-auto">
+            <div className="items-center">
+              <h1 className="text-xl text-center mb-4">Etudiants Absents</h1>
+              <div className="flex flex-row">
+                <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
+                  <div className="card-body">
+                    <p>Module :</p>
+                    <p>Demi jourée :</p>
+                    <p>Local :</p>
+                  </div>
+                </div>
+                <div className="w-full max-w-xs">
+                  <select
+                    className="mx-auto bg-gray-300 select select-bordered w-full"
+                    value={seance}
+                    onChange={(e) => setSeance(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Seance
+                    </option>
+                    <option value="S1">Seance 1</option>
+                    <option value="S2">Seance 2</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex">
+                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
+                  <input type="text" className="grow" placeholder="Search" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </label>
+              </div>
+            </div>
+            <table className="table m-auto w-4/5">
+              <thead>
+                <tr className="text-slate-700">
+                  <th>Nom</th>
+                  <th>Prenom</th>
+                  <th>Code apogee</th>
+                  <th>CNE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seance === "S1" &&
+                  etudiantsAS1.map((etudiant) => (
+                    <tr key={etudiant.codeApogee} className="cursor-pointer">
+                      <td>{etudiant.nom_etudiant}</td>
+                      <td>{etudiant.prenom_etudiant}</td>
+                      <td>{etudiant.codeApogee}</td>
+                      <td>{etudiant.CNE}</td>
+                    </tr>
+                  ))}
+                {seance === "S2" &&
+                  etudiantsAS2.map((etudiant) => (
+                    <tr key={etudiant.codeApogee} className="cursor-pointer">
+                      <td>{etudiant.nom_etudiant}</td>
+                      <td>{etudiant.prenom_etudiant}</td>
+                      <td>{etudiant.codeApogee}</td>
+                      <td>{etudiant.CNE}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          className="tab"
+          aria-label="Rapports"
+        />
+        <div
+          role="tabpanel"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+        >
+          <div className="flex flex-row">
+            <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
+              <div className="card-body">
+                <p>Module :</p>
+                <p>Demi jourée :</p>
+                <p>Local :</p>
+              </div>
+            </div>
+            <div className="w-full max-w-xs">
+              <select
+                className="mx-auto bg-gray-300 select select-bordered w-full"
+                value={local}
+                onChange={(e) => setLocal(e.target.value)}
+              >
+                <option disabled value="">
+                  Selectionner le local
+                </option>
+                <option>Seance 1</option>
+                <option>Seance 2</option>
+              </select>
             </div>
           </div>
-        );
-      default:
-        return null;
-    }
+          <div className="flex flex-row flex-wrap justify-around content-around">
+            {rapport.map((rapport, index) => (
+              <div key={index} className="content-center">
+                <p>{rapport.titre_rapport}</p>
+                <p>{rapport.contenu}</p>
+                <p>{rapport.nom_etudiant}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          className="tab"
+          aria-label="Surveillants"
+        />
+        <div
+          role="tabpanel"
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+        >
+          <div className="overflow-x-auto">
+            <div className="items-center">
+              <h1 className="text-xl text-center mb-4">Surveillants</h1>
+              <div className="flex flex-row">
+                <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
+                  <div className="card-body">
+                    <p>Module :</p>
+                    <p>Demi jourée :</p>
+                    <p>Local :</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex">
+                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
+                  <input type="text" className="grow" placeholder="Search" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </label>
+              </div>
+            </div>
+            <table className="table m-auto w-4/5">
+              <thead>
+                <tr className="text-slate-700">
+                  <th>Nom</th>
+                  <th>Prenom</th>
+                  <th>Num</th>
+                  <th>Signature</th>
+                </tr>
+              </thead>
+              <tbody>
+                {surveillants.map((surveillant) => (
+                  <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
+                    <td>{surveillant.nomComplet_s}</td>
+                    <td>{surveillant.id_departement}</td>
+                    <td>{surveillant.num}</td>
+                    <td></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -363,11 +382,11 @@ const Pvs = () => {
             <option disabled value="">
               Selectionner le local
             </option>
-            {locals.map((loc) => (
+            {locals.map((loc)=>{if(loc.num_local!=0) return(
               <option key={loc.id_local} value={loc.id_local}>
                 {loc.num_local}
               </option>
-            ))}
+            )})}
           </select>
         </div>
         <div className="w-full flex mb-4">
@@ -406,49 +425,10 @@ const Pvs = () => {
           <span className="ml-1">Rechercher</span>
         </button>
       </form>
-      {showTabs && (
-        <div role="tablist" className="tabs tabs-lifted">
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab"
-            aria-label="Etudiants Présents"
-            checked={selectedTab === ""}
-            onClick={() => setSelectedTab("")}
-          />
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab"
-            aria-label="Etudiants Absents"
-            checked={selectedTab === "etudiantsAbsents"}
-            onClick={() => setSelectedTab("etudiantsAbsents")}
-          />
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab"
-            aria-label="Rapports"
-            checked={selectedTab === "rapports"}
-            onClick={() => setSelectedTab("rapports")}
-          />
-          <input
-            type="radio"
-            name="my_tabs_2"
-            role="tab"
-            className="tab"
-            aria-label="Surveillants"
-            checked={selectedTab === "surveillants"}
-            onClick={() => setSelectedTab("surveillants")}
-          />
-          {displayTabs()}
-        </div>
-      )}
+      {showTabs && displayTabs()}
     </>
   );
 };
 
 export default Pvs;
+//assurer une gestion fluide sans erreur(plantage, etc...)
