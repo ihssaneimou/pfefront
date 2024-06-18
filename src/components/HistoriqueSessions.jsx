@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 import { useToken } from "../App";
+import './HistoriqueSessions.css'; // Assurez-vous que le chemin est correct
 
 const HistoriqueSessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -9,20 +9,21 @@ const HistoriqueSessions = () => {
   const [typeSession, setTypeSession] = useState("");
   const [dateDebut, setDateDebut] = useState("");
   const [dateFin, setDateFin] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
-  const { token, setToken } = useToken();
+  const { token } = useToken();
 
   useEffect(() => {
-    
     if (!token) {
       alert("No token found. Please log in.");
-    
       return;
     }
 
     axios
       .get("http://localhost:8000/api/session", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         setSessions(response.data);
@@ -30,11 +31,11 @@ const HistoriqueSessions = () => {
       .catch((error) => {
         console.error("Error fetching sessions", error);
       });
-  }, []);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await axios.post(
         "http://localhost:8000/api/session/create",
@@ -59,15 +60,89 @@ const HistoriqueSessions = () => {
     }
   };
 
+  const filteredSessions = sessions.filter((session) =>
+    session.nom_session?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredSessions.length / itemsPerPage);
+  const currentSessions = filteredSessions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfPageToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage > totalPages - halfPageToShow) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) =>
+      page === "..." ? (
+        <span key={index} className="mx-1 px-3 py-1">
+          ...
+        </span>
+      ) : (
+        <button
+          key={index}
+          className={`mx-1 px-3 py-1 rounded ${
+            currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => handlePageChange(page)}
+        >
+          {page}
+        </button>
+      )
+    );
+  };
+
   return (
-    <div className="overflow-x-auto p-4">
-      <div className="grid grid-cols-3 gap-4 items-center mb-4">
+    <div className="session-container">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
         <div>
-          <h1 className="text-xl mb-4">Historique des sessions</h1>
+          <h1 className="session-heading">Historique des sessions</h1>
         </div>
-        <div>
-          <label className="input input-bordered flex bg-gray-300 items-center gap-2">
-            <input type="text" className="grow" placeholder="Search" />
+        <div className="flex justify-center">
+          <label className="input input-bordered flex bg-white items-center gap-2 shadow-sm rounded w-full max-w-md">
+            <input
+              type="text"
+              className="search-input grow bg-transparent p-2"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -84,108 +159,132 @@ const HistoriqueSessions = () => {
         </div>
         <div className="flex justify-end">
           <button
-            className="btn mx-auto w-48 p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+            className="button"
             onClick={() => document.getElementById("my_modal_1").showModal()}
           >
             Créer session
           </button>
-          <dialog id="my_modal_1" className="modal">
-            <div className="modal-box bg-gray-200 p-6 rounded-lg shadow-lg">
-              <h3 className="font-bold text-lg mb-4">Créer une session</h3>
-              <form onSubmit={handleSubmit}>
-                <select
-                  className="select bg-gray-300 select-bordered w-full max-w-xs mb-4"
-                  name="nom_session"
-                  value={nomSession}
-                  onChange={(e) => setNomSession(e.target.value)}
-                >
-                  <option disabled value="">
-                    Nom session
-                  </option>
-                  <option value="Automne-hiver">Automne-hiver</option>
-                  <option value="Printemps-été">Printemps-été</option>
-                </select>
-                <select
-                  className="select bg-gray-300 select-bordered w-full max-w-xs"
-                  name="type_session"
-                  value={typeSession}
-                  onChange={(e) => setTypeSession(e.target.value)}
-                >
-                  <option disabled value="">
-                    Type session
-                  </option>
-                  <option value="Normale">Normale</option>
-                  <option value="Rattrapage">Rattrapage</option>
-                </select>
-                <div className="mt-4 mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date début :
-                  </label>
-                  <input
-                    type="date"
-                    className="input bg-gray-300 w-full max-w-xs"
-                    name="datedebut"
-                    value={dateDebut}
-                    onChange={(e) => setDateDebut(e.target.value)}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date fin :
-                  </label>
-                  <input
-                    type="date"
-                    className="input bg-gray-300 w-full max-w-xs"
-                    name="datefin"
-                    value={dateFin}
-                    onChange={(e) => setDateFin(e.target.value)}
-                  />
-                </div>
-                <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                  <button
-                    type="submit"
-                    className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                  >
-                    Confirmer
-                  </button>
-                  <div></div>
-                  <button
-                    type="button"
-                    className="btn text-white bg-red-400 border-none hover:bg-red-500"
-                    onClick={() => document.getElementById("my_modal_1").close()}
-                  >
-                    Close
-                  </button>
-                </div>
-              </form>
-            </div>
-          </dialog>
         </div>
       </div>
-      <table className="table lg:w-[70vw] w-full">
-        <thead>
-          <tr className="text-slate-700">
-            <th>Nom session</th>
-            <th>Type session</th>
-            <th>Date debut</th>
-            <th>Date fin</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sessions.map((session, id_session) => (
-            <tr key={id_session}>
-              <td>{session.nom_session}</td>
-              <td>{session.type_session}</td>
-              <td>{session.datedebut}</td>
-              <td>{session.datefin}</td>
-              <td>
-                <button className="btn btn-ghost btn-xs">Consulter</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="session-table-container bg-white shadow-md rounded-lg overflow-hidden max-w-full mx-auto">
+        <div className="table-responsive">
+          <table className="table-auto w-full table-full-width">
+            <thead>
+              <tr className="bg-gray-200 text-gray-700">
+                <th className="px-4 py-2">Nom session</th>
+                <th className="px-4 py-2">Type session</th>
+                <th className="px-4 py-2">Date début</th>
+                <th className="px-4 py-2">Date fin</th>
+                <th className="px-4 py-2">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentSessions.map((session, index) => (
+                <tr key={index} className="border-t">
+                  <td className="px-4 py-2">{session.nom_session}</td>
+                  <td className="px-4 py-2">{session.type_session}</td>
+                  <td className="px-4 py-2">{session.datedebut}</td>
+                  <td className="px-4 py-2">{session.datefin}</td>
+                  <td className="px-4 py-2">
+                    <button className="btn btn-ghost text-blue-600">Consulter</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-center mt-[-8] mb-5">
+          <button
+            className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Précédent
+          </button>
+          {renderPagination()}
+          <button
+            className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Suivant
+          </button>
+        </div>
+      </div>
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h3 className="font-bold text-xl mb-4">Créer une session</h3>
+          <form onSubmit={handleSubmit}>
+            <select
+              className="select bg-gray-200 select-bordered w-full mb-4"
+              name="nom_session"
+              value={nomSession}
+              required
+              onChange={(e) => setNomSession(e.target.value)}
+            >
+              <option disabled value="">
+                Nom session
+              </option>
+              <option value="Automne-hiver">Automne-hiver</option>
+              <option value="Printemps-été">Printemps-été</option>
+            </select>
+            <select
+              className="select bg-gray-200 select-bordered w-full mb-4"
+              name="type_session"
+              value={typeSession}
+              required
+              onChange={(e) => setTypeSession(e.target.value)}
+            >
+              <option disabled value="">
+                Type session
+              </option>
+              <option value="Normale">Normale</option>
+              <option value="Rattrapage">Rattrapage</option>
+            </select>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date début :
+              </label>
+              <input
+                type="date"
+                className="input bg-gray-200 w-full"
+                name="datedebut"
+                value={dateDebut}
+                required
+                onChange={(e) => setDateDebut(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date fin :
+              </label>
+              <input
+                type="date"
+                className="input bg-gray-200 w-full"
+                name="datefin"
+                value={dateFin}
+                required
+                onChange={(e) => setDateFin(e.target.value)}
+              />
+            </div>
+            <div className="modal-action flex justify-end">
+              <button
+                type="submit"
+                className="button"
+              >
+                Confirmer
+              </button>
+              <button
+                type="button"
+                className="button bg-red-500 hover:bg-red-600 ml-2"
+                onClick={() => document.getElementById("my_modal_1").close()}
+              >
+                Fermer
+              </button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </div>
   );
 };

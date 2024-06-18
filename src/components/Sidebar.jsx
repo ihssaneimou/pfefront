@@ -29,6 +29,7 @@ import {
   Person,
   Timelapse,
 } from "@mui/icons-material";
+import './Sidebar.css';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -89,10 +90,10 @@ const Sidebar = () => {
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content h-[100vh] p-8 bg-gray-200 text-black flex flex-col items-center">
+      <div className="drawer-content h-[100vh] p-8 bg-gray-50 text-gray-800 flex flex-col items-center">
         {renderContent()}
       </div>
-      <div className="drawer-side bg-gray-100 text-base-100">
+      <div className="drawer-side bg-white shadow-md">
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"
@@ -102,7 +103,7 @@ const Sidebar = () => {
           sx={{ width: "100%", maxWidth: 360 }}
           component="nav"
           aria-labelledby="nested-list-subheader"
-          className="bg-gray-100"
+          className="bg-white"
         >
           <ListItemButton onClick={() => handleButtonClick("/home", "Home")}>
             <ListItemIcon>

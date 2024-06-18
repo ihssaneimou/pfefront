@@ -1,7 +1,9 @@
 import React from "react";
 import logo from "../assets/fsac.png";
+import pic from "../assets/OIP.jpeg";
 import axios from "axios";
 import { useToken } from "../App"; // Assuming useToken is defined and provides token management
+import './Navbar.css'; // Import custom CSS for styling
 
 const Navbar = () => {
   const { token, setToken } = useToken();
@@ -29,7 +31,6 @@ const Navbar = () => {
       console.log("Logout response:", response.data); // Log the response from the server
 
       // Remove the token from both localStorage and context state
-      
       setToken(null);
 
       // Redirect to the login page
@@ -41,8 +42,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-gray-900 text-white px-4 py-2 shadow-md">
-      <div className="flex-1 flex items-center">
+    <nav className="navbar bg-blue-700 text-gray-100 px-6 py-4 shadow-md flex justify-between items-center">
+      <div className="flex items-center">
         <label
           htmlFor="my-drawer-2"
           className="btn btn-circle swap swap-rotate drawer-button lg:hidden"
@@ -68,16 +69,16 @@ const Navbar = () => {
           </svg>
         </label>
 
-        <a href="/home" className="logo-link cursor-pointer ml-4 lg:ml-16">
-          <img src={logo} alt="Logo" className="logo w-16 lg:w-24" />
+        <a href="/home" className="ml-4 lg:ml-16">
+          <img src={logo} alt="Logo" className="w-24 lg:w-32" />
         </a>
       </div>
-      <div className="flex-none flex items-center gap-4">
-        <button className="btn btn-ghost btn-circle">
+      <div className="flex items-center gap-6">
+        <button className="btn btn-ghost btn-circle text-gray-800 hover:text-gray-600">
           <div className="indicator">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-8 w-8"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -93,7 +94,7 @@ const Navbar = () => {
           </div>
         </button>
         <button
-          className="btn p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+          className="btn px-6 py-3 rounded-md bg-blue-600 text-white hover:bg-red-600 focus:outline-none transition duration-200"
           onClick={handleLogout}
         >
           Déconnexion

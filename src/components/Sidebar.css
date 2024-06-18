@@ -1,0 +1,132 @@
+/* General styles for a clean, professional look */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #374151;
+  }
+  
+  /* Sidebar styles */
+  .drawer-side {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .drawer-content {
+    background-color: #f9fafb;
+    color: #374151;
+  }
+  
+  .drawer-content h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  /* List item styles */
+  .MuiListItemButton-root {
+    border-radius: 0.5rem;
+    margin: 0.25rem 0;
+    transition: background-color 0.3s;
+  }
+  
+  .MuiListItemButton-root:hover {
+    background-color: #e5e7eb;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    background-color: #6366f1;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+    font-weight: 500;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4f46e5;
+  }
+  
+  .btn-secondary {
+    background-color: #9ca3af;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #6b7280;
+  }
+  
+  .btn-danger {
+    background-color: #ef4444;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-danger:hover {
+    background-color: #dc2626;
+  }
+  
+  /* Input styles */
+  .input-search {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    transition: border-color 0.3s;
+  }
+  
+  .input-search:focus {
+    border-color: #6366f1;
+    outline: none;
+  }
+  
+  /* Table styles */
+  .table-auto {
+    width: 100%;
+    margin-bottom: 2rem;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-auto th,
+  .table-auto td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .table-auto th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+  }
+  
+  .table-auto td {
+    background-color: #ffffff;
+  }
+  
+  .table-auto tr:hover td {
+    background-color: #f9fafb;
+  }
+  
+  /* Modal styles */
+  .modal-box {
+    width: 90%;
+    max-width: 600px;
+  }
+  
+  .modal-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+  
+  .modal-action .btn {
+    margin-left: 0.5rem;
+  }
+  

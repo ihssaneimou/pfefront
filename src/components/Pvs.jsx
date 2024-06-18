@@ -9,6 +9,7 @@ const Pvs = () => {
   const [demiJournee, setDemiJournee] = useState("");
   const [seance, setSeance] = useState("");
   const [showTabs, setShowTabs] = useState(false);
+  const [activeTab, setActiveTab] = useState("etudiantsPresents"); // New state for active tab
   const [etudiantsPS1, setEtudiantsPS1] = useState([]);
   const [etudiantsAS1, setEtudiantsAS1] = useState([]);
   const [etudiantsPS2, setEtudiantsPS2] = useState([]);
@@ -22,7 +23,7 @@ const Pvs = () => {
       alert("No token found. Please log in.");
       return;
     }
-    
+
     // Fetch locals data
     const fetchLocals = async () => {
       try {
@@ -40,7 +41,7 @@ const Pvs = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (!token) {
       alert("No token found. Please log in.");
       return;
@@ -52,7 +53,7 @@ const Pvs = () => {
         { date, id_local: local, demi_journee: demiJournee },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-       console.log(response.data)
+      console.log(response.data)
       setEtudiantsPS1(response.data.etudiantsPS1 || []);
       setEtudiantsAS1(response.data.etudiantsAS1 || []);
       setEtudiantsPS2(response.data.etudiantsPS2 || []);
@@ -74,11 +75,12 @@ const Pvs = () => {
           role="tab"
           className="tab"
           aria-label="Etudiants Présents"
-          checked
+          checked={activeTab === "etudiantsPresents"}
+          onChange={() => setActiveTab("etudiantsPresents")}
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "etudiantsPresents" ? "" : "hidden"}`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -162,10 +164,12 @@ const Pvs = () => {
           role="tab"
           className="tab"
           aria-label="Etudiants Absents"
+          checked={activeTab === "etudiantsAbsents"}
+          onChange={() => setActiveTab("etudiantsAbsents")}
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "etudiantsAbsents" ? "" : "hidden"}`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -249,10 +253,12 @@ const Pvs = () => {
           role="tab"
           className="tab"
           aria-label="Rapports"
+          checked={activeTab === "rapports"}
+          onChange={() => setActiveTab("rapports")}
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "rapports" ? "" : "hidden"}`}
         >
           <div className="flex flex-row">
             <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
@@ -293,10 +299,12 @@ const Pvs = () => {
           role="tab"
           className="tab"
           aria-label="Surveillants"
+          checked={activeTab === "surveillants"}
+          onChange={() => setActiveTab("surveillants")}
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "surveillants" ? "" : "hidden"}`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -331,9 +339,8 @@ const Pvs = () => {
             <table className="table m-auto w-4/5">
               <thead>
                 <tr className="text-slate-700">
-                  <th>Nom</th>
-                  <th>Prenom</th>
-                  <th>Num</th>
+                  <th>Nom Complet</th>
+                  <th>Numero de departement</th>
                   <th>Signature</th>
                 </tr>
               </thead>
@@ -382,11 +389,13 @@ const Pvs = () => {
             <option disabled value="">
               Selectionner le local
             </option>
-            {locals.map((loc)=>{if(loc.num_local!=0) return(
-              <option key={loc.id_local} value={loc.id_local}>
-                {loc.num_local}
-              </option>
-            )})}
+            {locals.map((loc) => {
+              if (loc.num_local != 0) return (
+                <option key={loc.id_local} value={loc.id_local}>
+                  {loc.num_local}
+                </option>
+              )
+            })}
           </select>
         </div>
         <div className="w-full flex mb-4">
@@ -431,4 +440,3 @@ const Pvs = () => {
 };
 
 export default Pvs;
-//assurer une gestion fluide sans erreur(plantage, etc...)

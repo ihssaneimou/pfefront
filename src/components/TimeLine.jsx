@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './TimeLine.css'; // Assurez-vous que le chemin est correct
 
 const TimeLine = () => {
   const [actions, setActions] = useState([]);
@@ -16,11 +17,13 @@ const TimeLine = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Activity Timeline</h1>
-      <ul>
+    <div className="timeline-container">
+      <h1 className="timeline-heading">Chronologie des Activités</h1>
+      <ul className="space-y-3 w-full">
         {actions.map((action, index) => (
-          <li key={index}>{action.description}</li>
+          <li key={index} className="timeline-item w-full">
+            <p className="timeline-text w-full">{action.description}</p>
+          </li>
         ))}
       </ul>
     </div>

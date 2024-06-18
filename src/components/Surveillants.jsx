@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useToken } from "../App";
+import './Surveillants.css'; // Assuming you want to reuse the same CSS
 
 const Surveillants = () => {
   const [surveillants, setSurveillants] = useState([]);
@@ -9,6 +10,8 @@ const Surveillants = () => {
   const [nomComplet, setNomComplet] = useState("");
   const [idDepartement, setIdDepartement] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const { token } = useToken();
 
@@ -94,55 +97,97 @@ const Surveillants = () => {
     }
   };
 
+  const handleFetchSurveillantsByDepartment = async () => {
+    if (!idDepartement) {
+      alert("Veuillez sélectionner un département.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8000/api/surveillant/department/${idDepartement}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFilteredSurveillants(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des surveillants par département", error);
+      alert("Erreur lors de la récupération des surveillants par département");
+    }
+  };
+
   const resetForm = () => {
     setNomComplet("");
     setIdDepartement("");
   };
 
-  return (
-    <div className="overflow-x-auto p-4">
-      <div className="w-full flex mb-4">
-        <select 
-          className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
-          value={idDepartement}
-          onChange={(e) => setIdDepartement(e.target.value)}
-        >
-          <option disabled value="">
-            Selectionner le nom du departement
-          </option>
-          {departments.map((department) => (
-            <option key={department.id_departement} value={department.id_departement}>
-              {department.nom_departement}
-            </option>
-          ))}
-        </select>
+  const totalPages = Math.ceil(filteredSurveillants.length / itemsPerPage);
+  const currentSurveillants = filteredSurveillants.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfPageToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage > totalPages - halfPageToShow) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) =>
+      page === "..." ? (
+        <span key={index} className="mx-1 px-2 py-1 text-sm">
+          ...
+        </span>
+      ) : (
         <button
-          type="submit"
-          className="flex items-center px-3 py-2 bg-green-200 rounded-md text-green-700"
-          onClick={() => handleSearch(searchQuery)}
+          key={index}
+          className={`mx-1 px-2 py-1 rounded text-sm ${
+            currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => handlePageChange(page)}
         >
-          <svg
-            className="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-              d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-            />
-          </svg>
-          <span className="ml-1">Rechercher</span>
+          {page}
         </button>
-      </div>
-      <div className="grid grid-cols-3 gap-4 items-center mb-4">
+      )
+    );
+  };
+
+  return (
+    <div className="session-container">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-4">
         <div>
-          <h1 className="text-xl mb-4">Liste des surveillants</h1>
+          <h1 className="session-heading text-xl">Liste des surveillants</h1>
         </div>
         <div>
           <label className="input input-bordered flex bg-gray-300 items-center gap-2">
@@ -169,90 +214,114 @@ const Surveillants = () => {
         </div>
         <div className="flex justify-end">
           <button
-            className="btn mx-auto w-48 p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-            onClick={() => document.getElementById("my_modal_1").showModal()}
+            className="button text-sm"
+            onClick={() => {
+              resetForm();
+              document.getElementById("my_modal_1").showModal();
+            }}
           >
             Ajouter Surveillant
           </button>
-          <dialog id="my_modal_1" className="modal">
-            <div className="modal-box bg-gray-200">
-              <h3 className="font-bold text-lg mb-4">Ajouter un surveillant</h3>
-              <form onSubmit={handleSubmit}>
-                <label className="input bg-gray-300 input-bordered flex items-center gap-2 mb-4">
-                  <input
-                    type="text"
-                    className="grow"
-                    placeholder="Nom Complet"
-                    value={nomComplet}
-                    onChange={(e) => setNomComplet(e.target.value)}
-                  />
-                </label>
-                <label className="input bg-gray-300 input-bordered flex items-center gap-2">
-                  <input
-                    type="text"
-                    className="grow"
-                    placeholder="ID departement"
-                    value={idDepartement}
-                    onChange={(e) => setIdDepartement(e.target.value)}
-                  />
-                </label>
-                <div className="modal-action grid grid-cols-3 gap-4 items-center">
-                  <button
-                    type="submit"
-                    className="w-full p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
-                  >
-                    Confirmer
-                  </button>
-                  <div></div>
-                  <button
-                    type="button"
-                    className="btn text-white bg-red-400 border-none hover:bg-red-500"
-                    onClick={() => document.getElementById("my_modal_1").close()}
-                  >
-                    Close
-                  </button>
-                </div>
-              </form>
-            </div>
-          </dialog>
         </div>
       </div>
-
-      <table className="table lg:w-[70vw] w-full">
-        <thead>
-          <tr>
-            <th>Nom Complet</th>
-            <th>ID departement</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredSurveillants.map((surveillant) => (
-            <tr className="cursor-pointer" key={surveillant.id_surveillant}>
-              <td>{surveillant.nomComplet_s}</td>
-              <td>{surveillant.id_departement}</td>
-              <td>
-                <button
-                  className="btn btn-ghost btn-xs"
-                  onClick={() => handleDelete(surveillant.id_surveillant)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-person-x"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="session-table-container bg-white shadow-md rounded-lg overflow-hidden max-w-full mx-auto">
+        <div className="table-responsive">
+          <table className="table-auto w-full table-full-width text-sm">
+            <thead>
+              <tr className="bg-gray-200 text-gray-700">
+                <th className="px-3 py-1">Nom Complet</th>
+                <th className="px-3 py-1">ID departement</th>
+                <th className="px-3 py-1">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentSurveillants.map((surveillant) => (
+                <tr key={surveillant.id_surveillant} className="border-t">
+                  <td className="px-3 py-1 text-center align-middle">{surveillant.nomComplet_s}</td>
+                  <td className="px-3 py-1 text-center align-middle">{surveillant.id_departement}</td>
+                  <td className="px-3 py-1 flex justify-center items-center gap-1">
+                    <button
+                      className="btn btn-ghost text-red-600 text-xs"
+                      onClick={() => handleDelete(surveillant.id_surveillant)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-person-x"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-center mt-[-4] mb-4">
+          <button
+            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Précédent
+          </button>
+          {renderPagination()}
+          <button
+            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Suivant
+          </button>
+        </div>
+      </div>
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h3 className="font-bold text-lg mb-2">
+            Ajouter un surveillant
+          </h3>
+          <form onSubmit={handleSubmit}>
+            <label className="input bg-gray-200 input-bordered flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                className="grow text-sm"
+                placeholder="Nom Complet"
+                value={nomComplet}
+                onChange={(e) => setNomComplet(e.target.value)}
+              />
+            </label>
+            <label className="input bg-gray-200 input-bordered flex items-center gap-2">
+              <input
+                type="text"
+                className="grow text-sm"
+                placeholder="ID departement"
+                value={idDepartement}
+                onChange={(e) => setIdDepartement(e.target.value)}
+              />
+            </label>
+            <div className="modal-action flex justify-end mt-2">
+              <button
+                type="submit"
+                className="button text-sm"
+              >
+                Confirmer
+              </button>
+              <button
+                type="button"
+                className="button bg-red-500 hover:bg-red-600 ml-2 text-sm"
+                onClick={() => document.getElementById("my_modal_1").close()}
+              >
+                Fermer
+              </button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </div>
   );
 };
