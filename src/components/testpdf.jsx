@@ -1,7 +1,9 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 function PdfViewer() {
-  const fileUrl = 'http://localhost:8000/api/pdf/ZWbgMMKI1iT6gUCrQaMDSEYuWU77OoNYrLgsFKcA.pdf'; // Adjust the URL to match your API endpoint
+  const { pdfPath } = useParams();
+  const fileUrl = `http://localhost:8000/api/pdf/${pdfPath}`; // Adjust the URL to match your API endpoint
 
   return (
     <div className='h-full'  style={{ height: '100vh' }}>
