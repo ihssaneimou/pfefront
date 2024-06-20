@@ -20,7 +20,7 @@ const HistoriqueSessions = () => {
   // const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   const { token } = useToken();
 

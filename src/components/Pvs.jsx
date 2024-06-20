@@ -89,10 +89,13 @@ const Pvs = () => {
   const [etudiantsPS2, setEtudiantsPS2] = useState([]);
   const [etudiantsAS2, setEtudiantsAS2] = useState([]);
   const [surveillants, setSurveillants] = useState([]);
+  //const [module, setModule] = useState("");
+  const [module1, setModule1] = useState("");
+  const [module2, setModule2] = useState("");
   const [rapport, setRapport] = useState([]);
   const { token, setToken } = useToken();
 
-  const itemsPerPage = 10; // Items per page for pagination
+  const itemsPerPage = 7; // Items per page for pagination
 
   // Pagination states for each section
   const [currentPagePS1, setCurrentPagePS1] = useState(1);
@@ -144,6 +147,9 @@ const Pvs = () => {
       setEtudiantsAS2(response.data.etudiantsAS2 || []);
       setSurveillants(response.data.surveillants || []);
       setRapport(response.data.rapport || []);
+      //setModule(response.data.module || "");
+      setModule1(response.data.module1 || "");
+      setModule2(response.data.module2 || "");
       setShowTabs(true);
     } catch (error) {
       console.error("Error fetching data", error);
@@ -206,9 +212,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                    <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
                 <div className="w-full max-w-xs">
@@ -304,9 +310,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                  <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
                 <div className="w-full max-w-xs">
@@ -399,9 +405,9 @@ const Pvs = () => {
           <div className="flex flex-row">
             <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
               <div className="card-body">
-                <p>Module :</p>
-                <p>Demi jourée :</p>
-                <p>Local :</p>
+              <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
               </div>
             </div>
           
@@ -443,9 +449,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                  <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
               </div>

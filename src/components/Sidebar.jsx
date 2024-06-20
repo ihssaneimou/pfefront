@@ -95,7 +95,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open overflow-auto h-clac-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content h-[100vh] p-8 bg-gray-50 text-gray-800 flex flex-col items-center">
         {renderContent()}

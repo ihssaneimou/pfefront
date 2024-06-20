@@ -2,17 +2,89 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Make sure to install axios
 import { useToken } from "../App";
 
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const pages = [];
+  const maxPagesToShow = 5;
+  const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+  if (totalPages <= maxPagesToShow) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    if (currentPage <= halfPageToShow) {
+      for (let i = 1; i <= maxPagesToShow; i++) {
+        pages.push(i);
+      }
+      pages.push("...");
+      pages.push(totalPages);
+    } else if (currentPage > totalPages - halfPageToShow) {
+      pages.push(1);
+      pages.push("...");
+      for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      pages.push("...");
+      for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+        pages.push(i);
+      }
+      pages.push("...");
+      pages.push(totalPages);
+    }
+  }
+
+  return (
+    <div className="flex justify-center mt-4 mb-4">
+      <button
+        className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Précédent
+      </button>
+      {pages.map((page, index) =>
+        page === "..." ? (
+          <span key={index} className="mx-1 px-2 py-1">
+            ...
+          </span>
+        ) : (
+          <button
+            key={index}
+            className={`mx-1 px-2 py-1 rounded ${
+              currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </button>
+        )
+      )}
+      <button
+        className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Suivant
+      </button>
+    </div>
+  );
+};
+
 const Repartitions = () => {
   const [date, setDate] = useState("");
   const [local, setLocal] = useState("");
   const [demiJournee, setDemiJournee] = useState("");
   const [showTabs, setShowTabs] = useState(false);
-  const [students, setStudents] = useState([]); // New state for storing locals
-  const [surveillants, setSurveillants] = useState([]); // New state for storing locals
-  const [locals, setLocals] = useState([]); // New state for storing locals
+  const [students, setStudents] = useState([]);
+  const [surveillants, setSurveillants] = useState([]);
+  const [locals, setLocals] = useState([]);
   const { token, setToken } = useToken();
-  const [activeTab, setActiveTab] = useState('Repartition etudiant'); // Default active tab
-
+  const [activeTab, setActiveTab] = useState('Repartition etudiant');
+  const [currentPageStudents, setCurrentPageStudents] = useState(1);
+  const [currentPageSurveillants, setCurrentPageSurveillants] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     if (!token) {
@@ -20,7 +92,6 @@ const Repartitions = () => {
       return;
     }
     
-    // Fetch locals data
     const fetchLocals = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/local", {
@@ -48,28 +119,22 @@ const Repartitions = () => {
       alert("No token found. Please log in.");
       return;
     }  
-    console.log(data)
     try {
-      // Fetch students data
-      
       const studentResponse = await axios.post(
         "http://127.0.0.1:8000/api/etudiants-examen",
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log(studentResponse.data);  // Check the raw response format
-      console.log(Array.isArray(studentResponse.data.data));  // Verify it's an array
-      Array.isArray(studentResponse.data.data) ?setStudents(studentResponse.data.data):setStudents([]);
-      console.log(students)
+      Array.isArray(studentResponse.data.data) ? setStudents(studentResponse.data.data) : setStudents([]);
+      setCurrentPageStudents(1);
 
-      // Fetch surveillants data
       const surveillantResponse = await axios.post(
         "http://127.0.0.1:8000/api/surveillants-examen",
         data,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log(surveillantResponse.data);
-      Array.isArray(surveillantResponse.data.data) ?setSurveillants(surveillantResponse.data.data ):setSurveillants([]);
+      Array.isArray(surveillantResponse.data.data) ? setSurveillants(surveillantResponse.data.data) : setSurveillants([]);
+      setCurrentPageSurveillants(1);
 
       setShowTabs(true);
     } catch (error) {
@@ -77,6 +142,18 @@ const Repartitions = () => {
     }
   };
 
+  const totalPagesStudents = Math.ceil(students.length / itemsPerPage);
+  const totalPagesSurveillants = Math.ceil(surveillants.length / itemsPerPage);
+
+  const currentStudents = students.slice(
+    (currentPageStudents - 1) * itemsPerPage,
+    currentPageStudents * itemsPerPage
+  );
+
+  const currentSurveillants = surveillants.slice(
+    (currentPageSurveillants - 1) * itemsPerPage,
+    currentPageSurveillants * itemsPerPage
+  );
 
   const displayTabs = () => {
     return (
@@ -92,7 +169,9 @@ const Repartitions = () => {
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "Repartition etudiant" ? "" : "hidden"
+          }`}
         >
           <div className="overflow-x-auto">
             <div className="grid grid-cols-3 gap-4 items-center">
@@ -119,7 +198,6 @@ const Repartitions = () => {
               </div>
             </div>
             <table className="table lg:w-[70vw] w-full">
-              {/* head */}
               <thead>
                 <tr className="text-slate-700">
                   <th>Nom</th>
@@ -130,8 +208,7 @@ const Repartitions = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                {students.map((student) => (
+                {currentStudents.map((student) => (
                   <tr key={student.codeApogee} className="cursor-pointer">
                     <td>{student.nom_etudiant}</td>
                     <td>{student.prenom_etudiant}</td>
@@ -141,16 +218,12 @@ const Repartitions = () => {
                   </tr>
                 ))}
               </tbody>
-
-              <tfoot>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </tfoot>
             </table>
+            <Pagination
+              currentPage={currentPageStudents}
+              totalPages={totalPagesStudents}
+              onPageChange={setCurrentPageStudents}
+            />
           </div>
         </div>
 
@@ -165,7 +238,9 @@ const Repartitions = () => {
         />
         <div
           role="tabpanel"
-          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "Repartition surveillant" ? "" : "hidden"
+          }`}
         >
           <div className="overflow-x-auto">
             <div className="grid grid-cols-3 gap-4 items-center">
@@ -192,7 +267,6 @@ const Repartitions = () => {
               </div>
             </div>
             <table className="table lg:w-[70vw] w-full">
-              {/* head */}
               <thead>
                 <tr>
                   <th>Nom Complet</th>
@@ -200,22 +274,19 @@ const Repartitions = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                {surveillants.map((surveillant) => (
+                {currentSurveillants.map((surveillant) => (
                   <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
                     <td>{surveillant.nomComplet_s}</td>
                     <td>{surveillant.id_departement}</td>
                   </tr>
                 ))}
               </tbody>
-
-              <tfoot>
-                <tr>
-                  <th></th>
-                  <th> </th>
-                </tr>
-              </tfoot>
             </table>
+            <Pagination
+              currentPage={currentPageSurveillants}
+              totalPages={totalPagesSurveillants}
+              onPageChange={setCurrentPageSurveillants}
+            />
           </div>
         </div>
       </div>
@@ -250,11 +321,14 @@ const Repartitions = () => {
             <option disabled value="">
               Selectionner le local
             </option>
-            {locals.map((loc) => {if(loc.num_local!=0) return(
-              <option key={loc.id_local} value={loc.id_local}>
-                {loc.num_local}
-              </option>
-)})}
+            {locals.map((loc) => {
+              if (loc.num_local != 0)
+                return (
+                  <option key={loc.id_local} value={loc.id_local}>
+                    {loc.num_local}
+                  </option>
+                );
+            })}
           </select>
         </div>
         <div className="w-full flex mb-4">

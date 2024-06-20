@@ -16,7 +16,7 @@ const Etudiants = () => {
   const [editMode, setEditMode] = useState(false);
   const [editEtudiant, setEditEtudiant] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 15;
 
   const { token } = useToken();
 

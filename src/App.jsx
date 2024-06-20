@@ -12,7 +12,7 @@ import Demandes from "./pages/demandes";
 import Pvs from "./pages/pvs";
 import { createContext, useContext, useState } from "react";
 import Test from "./components/Test";
-import PdfViewer from "./components/testpdf";
+import Pdf from "./components/Testpdf";
 
 
 const TokenContext = createContext();
@@ -49,8 +49,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </TokenProvider>
-       // <Test/>
-       //<PdfViewer filename="pve.pdf"/> 
+      //  <Test/>
+      //  <Pdf /> 
           
   );
 }
