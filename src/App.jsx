@@ -30,27 +30,27 @@ export const TokenProvider = ({ children }) => {
 
 function App() {
   return (
-    <TokenProvider>
-        <Navbar />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/authentification" element={<Authentification />} />
-          <Route path="/verification" element={<Verification />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/session" element={<Session />} />
-          <Route path="/session/listeetudiant" element={<Listeetudiant />} />
-          <Route path="/session/listesurveillant" element={<Listesurveillants />} />
-          <Route path="/repartitions" element={<Repartitions />} />
-          <Route path="/tablettesassociees" element={<Tablettes />} />
-          <Route path="/tablettesrefusees" element={<Tablettes />} />
-          <Route path="/tablettesbloquees" element={<Tablettes />} />
-          <Route path="/demandesassociation" element={<Demandes />} />
-          <Route path="/pvs" element={<Pvs />} />
-        </Routes>
-      </BrowserRouter>
-    </TokenProvider>
+    // <TokenProvider>
+    //     <Navbar />
+    //   <BrowserRouter>
+    //     <Routes>
+    //       <Route path="/authentification" element={<Authentification />} />
+    //       <Route path="/verification" element={<Verification />} />
+    //       <Route path="/home" element={<Home />} />
+    //       <Route path="/session" element={<Session />} />
+    //       <Route path="/session/listeetudiant" element={<Listeetudiant />} />
+    //       <Route path="/session/listesurveillant" element={<Listesurveillants />} />
+    //       <Route path="/repartitions" element={<Repartitions />} />
+    //       <Route path="/tablettesassociees" element={<Tablettes />} />
+    //       <Route path="/tablettesrefusees" element={<Tablettes />} />
+    //       <Route path="/tablettesbloquees" element={<Tablettes />} />
+    //       <Route path="/demandesassociation" element={<Demandes />} />
+    //       <Route path="/pvs" element={<Pvs />} />
+    //     </Routes>
+    //   </BrowserRouter>
+    // </TokenProvider>
        // <Test/>
-      //  <PdfViewer /> 
+        <PdfViewer /> 
           
   );
 }
