@@ -130,3 +130,6 @@ body {
     margin-left: 0.5rem;
   }
   
+  .h-clac-screen {
+    height: calc(100vh - 82px);
+  }
