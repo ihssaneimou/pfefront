@@ -6,13 +6,14 @@ const TablettesAssociees = () => {
   const [tabletteData, setTabletteData] = useState([]);
   const [filteredTabletteData, setFilteredTabletteData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 22;
   const { token } = useToken();
 
   useEffect(() => {
     if (!token) {
       alert("No token found. Please log in.");
     } else {
-      // Fetch the initial data with token
       axios.get("http://localhost:8000/api/tablette", {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -68,6 +69,70 @@ const TablettesAssociees = () => {
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const totalPages = Math.ceil(filteredTabletteData.length / itemsPerPage);
+  const currentTabletteData = filteredTabletteData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfPageToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage > totalPages - halfPageToShow) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) =>
+      page === "..." ? (
+        <span key={index} className="mx-1 px-2 py-1 text-sm">
+          ...
+        </span>
+      ) : (
+        <button
+          key={index}
+          className={`mx-1 px-2 py-1 rounded text-sm ${
+            currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => handlePageChange(page)}
+        >
+          {page}
+        </button>
+      )
+    );
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -105,7 +170,7 @@ const TablettesAssociees = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTabletteData.map((tablette) => {
+            {currentTabletteData.map((tablette) => {
               if (tablette.statut === 'non associer') {
                 return (
                   <tr className="border-t" key={tablette.id_tablette}>
@@ -139,9 +204,25 @@ const TablettesAssociees = () => {
           </tbody>
         </table>
       </div>
+      <div className="flex justify-center mt-4 mb-4">
+        <button
+          className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Précédent
+        </button>
+        {renderPagination()}
+        <button
+          className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Suivant
+        </button>
+      </div>
     </div>
   );
 };
 
 export default TablettesAssociees;
-

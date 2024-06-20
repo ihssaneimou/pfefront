@@ -2,6 +2,80 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Make sure to install axios
 import { useToken } from "../App";
 
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfPageToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage > totalPages - halfPageToShow) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) =>
+      page === "..." ? (
+        <span key={index} className="mx-1 px-2 py-1 text-sm">
+          ...
+        </span>
+      ) : (
+        <button
+          key={index}
+          className={`mx-1 px-2 py-1 rounded text-sm ${
+            currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      )
+    );
+  };
+
+  return (
+    <div className="flex justify-center mt-4 mb-4">
+      <button
+        className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Précédent
+      </button>
+      {renderPagination()}
+      <button
+        className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Suivant
+      </button>
+    </div>
+  );
+};
+
 const Pvs = () => {
   const [date, setDate] = useState("");
   const [local, setLocal] = useState("");
@@ -17,6 +91,16 @@ const Pvs = () => {
   const [surveillants, setSurveillants] = useState([]);
   const [rapport, setRapport] = useState([]);
   const { token, setToken } = useToken();
+
+  const itemsPerPage = 10; // Items per page for pagination
+
+  // Pagination states for each section
+  const [currentPagePS1, setCurrentPagePS1] = useState(1);
+  const [currentPageAS1, setCurrentPageAS1] = useState(1);
+  const [currentPagePS2, setCurrentPagePS2] = useState(1);
+  const [currentPageAS2, setCurrentPageAS2] = useState(1);
+  const [currentPageRapport, setCurrentPageRapport] = useState(1);
+  const [currentPageSurveillants, setCurrentPageSurveillants] = useState(1);
 
   useEffect(() => {
     if (!token) {
@@ -53,7 +137,7 @@ const Pvs = () => {
         { date, id_local: local, demi_journee: demiJournee },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log(response.data)
+      console.log(response.data);
       setEtudiantsPS1(response.data.etudiantsPS1 || []);
       setEtudiantsAS1(response.data.etudiantsAS1 || []);
       setEtudiantsPS2(response.data.etudiantsPS2 || []);
@@ -67,6 +151,38 @@ const Pvs = () => {
   };
 
   const displayTabs = () => {
+    const totalPagesPS1 = Math.ceil(etudiantsPS1.length / itemsPerPage);
+    const totalPagesAS1 = Math.ceil(etudiantsAS1.length / itemsPerPage);
+    const totalPagesPS2 = Math.ceil(etudiantsPS2.length / itemsPerPage);
+    const totalPagesAS2 = Math.ceil(etudiantsAS2.length / itemsPerPage);
+    const totalPagesRapport = Math.ceil(rapport.length / itemsPerPage);
+    const totalPagesSurveillants = Math.ceil(surveillants.length / itemsPerPage);
+
+    const currentEtudiantsPS1 = etudiantsPS1.slice(
+      (currentPagePS1 - 1) * itemsPerPage,
+      currentPagePS1 * itemsPerPage
+    );
+    const currentEtudiantsAS1 = etudiantsAS1.slice(
+      (currentPageAS1 - 1) * itemsPerPage,
+      currentPageAS1 * itemsPerPage
+    );
+    const currentEtudiantsPS2 = etudiantsPS2.slice(
+      (currentPagePS2 - 1) * itemsPerPage,
+      currentPagePS2 * itemsPerPage
+    );
+    const currentEtudiantsAS2 = etudiantsAS2.slice(
+      (currentPageAS2 - 1) * itemsPerPage,
+      currentPageAS2 * itemsPerPage
+    );
+    const currentRapport = rapport.slice(
+      (currentPageRapport - 1) * itemsPerPage,
+      currentPageRapport * itemsPerPage
+    );
+    const currentSurveillants = surveillants.slice(
+      (currentPageSurveillants - 1) * itemsPerPage,
+      currentPageSurveillants * itemsPerPage
+    );
+
     return (
       <div role="tablist" className="tabs tabs-lifted">
         <input
@@ -80,7 +196,9 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "etudiantsPresents" ? "" : "hidden"}`}
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "etudiantsPresents" ? "" : "hidden"
+          }`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -136,7 +254,7 @@ const Pvs = () => {
               </thead>
               <tbody>
                 {seance === "S1" &&
-                  etudiantsPS1.map((etudiant) => (
+                  currentEtudiantsPS1.map((etudiant) => (
                     <tr key={etudiant.codeApogee} className="cursor-pointer">
                       <td>{etudiant.nom_etudiant}</td>
                       <td>{etudiant.prenom_etudiant}</td>
@@ -145,7 +263,7 @@ const Pvs = () => {
                     </tr>
                   ))}
                 {seance === "S2" &&
-                  etudiantsPS2.map((etudiant) => (
+                  currentEtudiantsPS2.map((etudiant) => (
                     <tr key={etudiant.codeApogee} className="cursor-pointer">
                       <td>{etudiant.nom_etudiant}</td>
                       <td>{etudiant.prenom_etudiant}</td>
@@ -155,6 +273,13 @@ const Pvs = () => {
                   ))}
               </tbody>
             </table>
+            <Pagination
+              currentPage={seance === "S1" ? currentPagePS1 : currentPagePS2}
+              totalPages={seance === "S1" ? totalPagesPS1 : totalPagesPS2}
+              onPageChange={(page) =>
+                seance === "S1" ? setCurrentPagePS1(page) : setCurrentPagePS2(page)
+              }
+            />
           </div>
         </div>
 
@@ -169,7 +294,9 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "etudiantsAbsents" ? "" : "hidden"}`}
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "etudiantsAbsents" ? "" : "hidden"
+          }`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -225,7 +352,7 @@ const Pvs = () => {
               </thead>
               <tbody>
                 {seance === "S1" &&
-                  etudiantsAS1.map((etudiant) => (
+                  currentEtudiantsAS1.map((etudiant) => (
                     <tr key={etudiant.codeApogee} className="cursor-pointer">
                       <td>{etudiant.nom_etudiant}</td>
                       <td>{etudiant.prenom_etudiant}</td>
@@ -234,7 +361,7 @@ const Pvs = () => {
                     </tr>
                   ))}
                 {seance === "S2" &&
-                  etudiantsAS2.map((etudiant) => (
+                  currentEtudiantsAS2.map((etudiant) => (
                     <tr key={etudiant.codeApogee} className="cursor-pointer">
                       <td>{etudiant.nom_etudiant}</td>
                       <td>{etudiant.prenom_etudiant}</td>
@@ -244,6 +371,13 @@ const Pvs = () => {
                   ))}
               </tbody>
             </table>
+            <Pagination
+              currentPage={seance === "S1" ? currentPageAS1 : currentPageAS2}
+              totalPages={seance === "S1" ? totalPagesAS1 : totalPagesAS2}
+              onPageChange={(page) =>
+                seance === "S1" ? setCurrentPageAS1(page) : setCurrentPageAS2(page)
+              }
+            />
           </div>
         </div>
 
@@ -258,7 +392,9 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "rapports" ? "" : "hidden"}`}
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "rapports" ? "" : "hidden"
+          }`}
         >
           <div className="flex flex-row">
             <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
@@ -268,22 +404,10 @@ const Pvs = () => {
                 <p>Local :</p>
               </div>
             </div>
-            <div className="w-full max-w-xs">
-              <select
-                className="mx-auto bg-gray-300 select select-bordered w-full"
-                value={local}
-                onChange={(e) => setLocal(e.target.value)}
-              >
-                <option disabled value="">
-                  Selectionner le local
-                </option>
-                <option>Seance 1</option>
-                <option>Seance 2</option>
-              </select>
-            </div>
+          
           </div>
           <div className="flex flex-row flex-wrap justify-around content-around">
-            {rapport.map((rapport, index) => (
+            {currentRapport.map((rapport, index) => (
               <div key={index} className="content-center">
                 <p>{rapport.titre_rapport}</p>
                 <p>{rapport.contenu}</p>
@@ -291,6 +415,11 @@ const Pvs = () => {
               </div>
             ))}
           </div>
+          <Pagination
+            currentPage={currentPageRapport}
+            totalPages={totalPagesRapport}
+            onPageChange={(page) => setCurrentPageRapport(page)}
+          />
         </div>
 
         <input
@@ -304,7 +433,9 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${activeTab === "surveillants" ? "" : "hidden"}`}
+          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
+            activeTab === "surveillants" ? "" : "hidden"
+          }`}
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -345,7 +476,7 @@ const Pvs = () => {
                 </tr>
               </thead>
               <tbody>
-                {surveillants.map((surveillant) => (
+                {currentSurveillants.map((surveillant) => (
                   <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
                     <td>{surveillant.nomComplet_s}</td>
                     <td>{surveillant.id_departement}</td>
@@ -355,6 +486,11 @@ const Pvs = () => {
                 ))}
               </tbody>
             </table>
+            <Pagination
+              currentPage={currentPageSurveillants}
+              totalPages={totalPagesSurveillants}
+              onPageChange={(page) => setCurrentPageSurveillants(page)}
+            />
           </div>
         </div>
       </div>
@@ -390,11 +526,12 @@ const Pvs = () => {
               Selectionner le local
             </option>
             {locals.map((loc) => {
-              if (loc.num_local != 0) return (
-                <option key={loc.id_local} value={loc.id_local}>
-                  {loc.num_local}
-                </option>
-              )
+              if (loc.num_local != 0)
+                return (
+                  <option key={loc.id_local} value={loc.id_local}>
+                    {loc.num_local}
+                  </option>
+                );
             })}
           </select>
         </div>

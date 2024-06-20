@@ -11,6 +11,9 @@ import Navbar from "./components/Navbar";
 import Demandes from "./pages/demandes";
 import Pvs from "./pages/pvs";
 import { createContext, useContext, useState } from "react";
+import Test from "./components/Test";
+import PdfViewer from "./components/testpdf";
+
 
 const TokenContext = createContext();
 export const useToken = () => useContext(TokenContext);
@@ -46,6 +49,9 @@ function App() {
         </Routes>
       </BrowserRouter>
     </TokenProvider>
+       // <Test/>
+       //<PdfViewer filename="pve.pdf"/> 
+          
   );
 }
 

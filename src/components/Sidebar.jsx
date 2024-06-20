@@ -26,8 +26,15 @@ import {
   FilePresent,
   HomeSharp,
   ListAltSharp,
-  Person,
+  Person, // Gardons l'icône Person pour les listes d'étudiants et de surveillants
   Timelapse,
+  TabletAndroid,
+  Link,
+  Lock,
+  Cancel,
+  Send,
+  School, // Nouvelle icône pour les étudiants
+  SupervisorAccount // Nouvelle icône pour les surveillants
 } from "@mui/icons-material";
 import './Sidebar.css';
 
@@ -128,13 +135,13 @@ const Sidebar = () => {
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/session/listeetudiant", "Etudiants")}>
                 <ListItemIcon>
-                  <Person />
+                  <School /> {/* Nouvelle icône pour les étudiants */}
                 </ListItemIcon>
                 <ListItemText primary="Etudiants" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/session/listesurveillant", "Surveillants")}>
                 <ListItemIcon>
-                  <Person />
+                  <SupervisorAccount /> {/* Nouvelle icône pour les surveillants */}
                 </ListItemIcon>
                 <ListItemText primary="Surveillants" />
               </ListItemButton>
@@ -148,7 +155,7 @@ const Sidebar = () => {
           </ListItemButton>
           <ListItemButton onClick={() => { handleClickTablette(); logAction("Clicked on Gestion tablettes") }}>
             <ListItemIcon>
-              <FileCopy />
+              <TabletAndroid />
             </ListItemIcon>
             <ListItemText primary="Gestion tablettes" />
             {openTablette ? <ExpandLess /> : <ExpandMore />}
@@ -157,25 +164,25 @@ const Sidebar = () => {
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/demandesassociation", "Demandes d'associations")}>
                 <ListItemIcon>
-                  <FilePresent />
+                  <Send />
                 </ListItemIcon>
                 <ListItemText primary="Demandes d'associations" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesassociees", "Tablettes associees")}>
                 <ListItemIcon>
-                  <FileOpen />
+                  <Link />
                 </ListItemIcon>
                 <ListItemText primary="Tablettes associees" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesbloquees", "Tablettes bloquees")}>
                 <ListItemIcon>
-                  <FileOpen />
+                  <Lock />
                 </ListItemIcon>
                 <ListItemText primary="Tablettes bloquees" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => handleButtonClick("/tablettesrefusees", "Tablettes refusees")}>
                 <ListItemIcon>
-                  <FileOpen />
+                  <Cancel />
                 </ListItemIcon>
                 <ListItemText primary="Tablettes refusees" />
               </ListItemButton>

@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useToken } from "../App";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
 import './HistoriqueSessions.css'; // Assurez-vous que le chemin est correct
 
 const HistoriqueSessions = () => {
+  const [pdfFile, setPdfFile] = useState('');
   const [sessions, setSessions] = useState([]);
   const [nomSession, setNomSession] = useState("");
   const [typeSession, setTypeSession] = useState("");
   const [dateDebut, setDateDebut] = useState("");
   const [dateFin, setDateFin] = useState("");
+  const [local, setLocal] = useState("");
+  const [demiJournee, setDemiJournee] = useState("");
+  const [date, setDate] = useState("");
+  const [locals, setLocals] = useState([]); // New state for storing locals
+  // const [selectedTablette, setSelectedTablette] = useState(null);
+  // const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -59,6 +68,28 @@ const HistoriqueSessions = () => {
       alert("Erreur lors de l'ajout de la session");
     }
   };
+
+  useEffect(() => {
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
+    }
+
+    // Fetch locals data
+    const fetchLocals = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/local", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setLocals(response.data);
+      } catch (error) {
+        console.error("Error fetching locals", error);
+      }
+    };
+
+    fetchLocals();
+  }, [token]);
+
 
   const filteredSessions = sessions.filter((session) =>
     session.nom_session?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -186,7 +217,15 @@ const HistoriqueSessions = () => {
                   <td className="px-4 py-2">{session.datedebut}</td>
                   <td className="px-4 py-2">{session.datefin}</td>
                   <td className="px-4 py-2">
-                    <button className="btn btn-ghost text-blue-600">Consulter</button>
+                    <button className="btn btn-ghost p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                    // onClick={() => {
+                    //   setSelectedTablette(tablette);
+                    //   setShowModal(true);
+                    // }}
+                    onClick={() => document.getElementById("my_modal_2").showModal()}
+                    >
+                      Consulter
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -282,6 +321,148 @@ const HistoriqueSessions = () => {
                 Fermer
               </button>
             </div>
+          </form>
+        </div>
+      </dialog>
+
+      <dialog id="my_modal_2" className="modal">
+        <div className="modal-box bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h3 className="font-bold text-xl mb-4">Consulter la session</h3>
+          <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date d'examen:
+              </label>
+              <input
+                type="date"
+                className="input bg-gray-200 w-full"
+                name="date"
+                value={date}
+                required
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
+
+          <div className="w-full flex mb-4">
+            <select
+            className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
+            value={demiJournee}
+            onChange={(e) => setDemiJournee(e.target.value)}
+          >
+            <option disabled value="">
+              Selectionner la demi-journée
+            </option>
+            <option>AM</option>
+            <option>PM</option>
+          </select>
+          </div>
+
+          <div className="w-full flex mb-4">
+            <select
+            className="mx-auto select select-bordered bg-gray-300 w-full max-w-xs"
+            value={local}
+            onChange={(e) => setLocal(e.target.value)}
+          >
+            <option disabled value="">
+              Selectionner le local
+            </option>
+            {locals.map((loc) => {
+              if (loc.num_local != 0) return (
+                <option key={loc.id_local} value={loc.id_local}>
+                  {loc.num_local}
+                </option>
+              )
+            })}
+              </select>
+            </div>
+
+            <div className="modal-action flex justify-end">
+              <button
+                type="submit"
+                className="button"
+              >
+                Confirmer
+              </button>
+              <button
+                type="button"
+                className="button bg-red-500 hover:bg-red-600 ml-2"
+                onClick={() => document.getElementById("my_modal_2").close()}
+              >
+                Fermer
+              </button>
+            </div>
+
+
+            {/* {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 className="text-2xl font-bold mb-4 text-blue-800">Affecter une tablette</h3>
+            <form onSubmit={handleAffectation}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Selectionner le local
+                </label>
+                <select
+                  className="bg-gray-300 select select-bordered w-full"
+                  value={local}
+                  onChange={(e) => setLocal(e.target.value)}
+                >
+                  <option disabled value="">
+                    Selectionner le local
+                  </option>
+                  {locals.map((loc) => loc.num_local !== 0 && (
+                    <option key={loc.id_local} value={loc.id_local}>
+                      {loc.num_local}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Selectionner la date
+                </label>
+                <input
+                  type="date"
+                  className="bg-gray-300 border border-gray-300 rounded-md p-2 w-full"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Selectionner la demi-journée
+                </label>
+                <select
+                  className="bg-gray-300 select select-bordered w-full"
+                  value={demiJournee}
+                  onChange={(e) => setDemiJournee(e.target.value)}
+                >
+                  <option disabled value="">
+                    Selectionner la demi-journée
+                  </option>
+                  <option value="AM">AM</option>
+                  <option value="PM">PM</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  className="btn bg-red-500 text-white hover:bg-red-600 rounded-md px-4 py-2"
+                  onClick={() => setShowModal(false)}
+                >
+                  Fermer
+                </button>
+                <button
+                  type="submit"
+                  className="btn bg-blue-600 text-white hover:bg-blue-700 rounded-md px-4 py-2"
+                >
+                  Confirmer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )} */}
           </form>
         </div>
       </dialog>

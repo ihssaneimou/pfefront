@@ -205,13 +205,13 @@ const Etudiants = () => {
 
     return pages.map((page, index) =>
       page === "..." ? (
-        <span key={index} className="mx-1 px-2 py-1 text-xs">
+        <span key={index} className="mx-1 px-2 py-1 text-sm">
           ...
         </span>
       ) : (
         <button
           key={index}
-          className={`mx-1 px-2 py-1 rounded text-xs ${
+          className={`mx-1 px-2 py-1 rounded text-sm ${
             currentPage === page ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
           onClick={() => handlePageChange(page)}
@@ -224,9 +224,9 @@ const Etudiants = () => {
 
   return (
     <div className="session-container">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-5">
         <div>
-          <h1 className="session-heading text-lg">Liste des etudiants</h1>
+          <h1 className="session-heading text-xl">Liste des etudiants</h1>
         </div>
         <div>
           <label className="input input-bordered flex bg-gray-300 items-center gap-2">
@@ -253,7 +253,7 @@ const Etudiants = () => {
         </div>
         <div className="flex justify-end">
           <button
-            className="button text-xs"
+            className="button text-base p-3"
             onClick={() => {
               setEditMode(false);
               setNom("");
@@ -268,42 +268,42 @@ const Etudiants = () => {
           </button>
         </div>
       </div>
-      <div className="session-table-container bg-white shadow-md rounded-lg overflow-hidden max-w-full mx-auto">
-        <div className="table-responsive">
-          <table className="table-auto w-full table-full-width text-xs">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700">
-                <th className="px-2 py-1">Nom</th>
-                <th className="px-2 py-1">Prenom</th>
-                <th className="px-2 py-1">Code Apogee</th>
-                <th className="px-2 py-1">CNE</th>
-                <th className="px-2 py-1">Photo</th>
-                <th className="px-2 py-1">Action</th>
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-200 text-gray-700 ">
+              <tr className="bg-gray-200 text-gray-700 text-base">
+                <th className="px-3 py-1">Nom</th>
+                <th className="px-3 py-1">Prenom</th>
+                <th className="px-3 py-1">Code Apogee</th>
+                <th className="px-3 py-1">CNE</th>
+                <th className="px-3 py-1">Photo</th>
+                <th className="px-3 py-1">Action</th>
               </tr>
             </thead>
             <tbody>
               {currentEtudiants.map((etudiant) => (
                 <tr key={etudiant.codeApogee} className="border-t">
-                  <td className="px-2 py-1 text-center align-middle">{etudiant.nom_etudiant}</td>
-                  <td className="px-2 py-1 text-center align-middle">{etudiant.prenom_etudiant}</td>
-                  <td className="px-2 py-1 text-center align-middle">{etudiant.codeApogee}</td>
-                  <td className="px-2 py-1 text-center align-middle">{etudiant.CNE}</td>
-                  <td className="px-2 py-1 text-center align-middle">
+                  <td className="px-3 py-1 text-center align-middle">{etudiant.nom_etudiant}</td>
+                  <td className="px-3 py-1 text-center align-middle">{etudiant.prenom_etudiant}</td>
+                  <td className="px-3 py-1 text-center align-middle">{etudiant.codeApogee}</td>
+                  <td className="px-3 py-1 text-center align-middle">{etudiant.CNE}</td>
+                  <td className="px-3 py-1 text-center align-middle">
                     <div className="avatar">
-                      <div className="mask mask-squircle w-8 h-8">
+                      <div className="mask mask-squircle w-10 h-10">
                         <img src={etudiant.photo} alt="Etudiant Avatar" />
                       </div>
                     </div>
                   </td>
-                  <td className="px-2 py-1 flex justify-center items-center gap-1">
+                  <td className="px-3 py-1 flex justify-center items-center gap-1">
                     <button
                       className="btn btn-ghost text-blue-600 text-xs"
                       onClick={() => openEditModal(etudiant)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
+                        width="20"
+                        height="20"
                         fill="currentColor"
                         className="bi bi-pencil"
                         viewBox="0 0 16 16"
@@ -317,8 +317,8 @@ const Etudiants = () => {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
+                        width="20"
+                        height="20"
                         fill="currentColor"
                         className="bi bi-person-x"
                         viewBox="0 0 16 16"
@@ -335,7 +335,7 @@ const Etudiants = () => {
         </div>
         <div className="flex justify-center mt-[-4] mb-4">
           <button
-            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-xs"
+            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -343,7 +343,7 @@ const Etudiants = () => {
           </button>
           {renderPagination()}
           <button
-            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-xs"
+            className="mx-1 px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
@@ -352,15 +352,15 @@ const Etudiants = () => {
         </div>
       </div>
       <dialog id="my_modal_1" className="modal">
-        <div className="modal-box bg-white p-2 rounded-lg shadow-lg max-w-2xl mx-auto">
-          <h3 className="font-bold text-base mb-2">
+        <div className="modal-box bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
+          <h3 className="font-bold text-lg mb-2">
             {editMode ? "Modifier un étudiant" : "Ajouter un étudiant"}
           </h3>
           <form onSubmit={editMode ? handleEdit : handleSubmit}>
             <label className="input bg-gray-200 input-bordered flex items-center gap-2 mb-2">
               <input
                 type="text"
-                className="grow text-xs"
+                className="grow text-sm"
                 placeholder="Nom"
                 value={nom}
                 onChange={(e) => setNom(e.target.value)}
@@ -369,7 +369,7 @@ const Etudiants = () => {
             <label className="input bg-gray-200 input-bordered flex items-center gap-2 mb-2">
               <input
                 type="text"
-                className="grow text-xs"
+                className="grow text-sm"
                 placeholder="Prénom"
                 value={prenom}
                 onChange={(e) => setPrenom(e.target.value)}
@@ -378,7 +378,7 @@ const Etudiants = () => {
             <label className="input bg-gray-200 input-bordered flex items-center gap-2 mb-2">
               <input
                 type="text"
-                className="grow text-xs"
+                className="grow text-sm"
                 placeholder="Code Apogee"
                 value={codeApogee}
                 onChange={(e) => setCodeApogee(e.target.value)}
@@ -388,7 +388,7 @@ const Etudiants = () => {
             <label className="input bg-gray-200 input-bordered flex items-center gap-2 mb-2">
               <input
                 type="text"
-                className="grow text-xs"
+                className="grow text-sm"
                 placeholder="CNE"
                 value={CNE}
                 onChange={(e) => setCNE(e.target.value)}
@@ -397,7 +397,7 @@ const Etudiants = () => {
             <label className="input bg-gray-200 input-bordered flex items-center gap-2">
               <input
                 type="text"
-                className="grow text-xs"
+                className="grow text-sm"
                 placeholder="Photo URL"
                 value={photo}
                 onChange={(e) => setPhoto(e.target.value)}
@@ -406,13 +406,13 @@ const Etudiants = () => {
             <div className="modal-action flex justify-end mt-2">
               <button
                 type="submit"
-                className="button text-xs"
+                className="button text-sm"
               >
                 Confirmer
               </button>
               <button
                 type="button"
-                className="button bg-red-500 hover:bg-red-600 ml-2 text-xs"
+                className="button bg-red-500 hover:bg-red-600 ml-2 text-sm"
                 onClick={() => document.getElementById("my_modal_1").close()}
               >
                 Fermer

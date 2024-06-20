@@ -95,6 +95,7 @@ const Surveillants = () => {
       );
       setFilteredSurveillants(filtered);
     }
+    setCurrentPage(1); // Reset to the first page after a search
   };
 
   const handleFetchSurveillantsByDepartment = async () => {
@@ -216,7 +217,6 @@ const Surveillants = () => {
           <button
             className="button text-sm"
             onClick={() => {
-              resetForm();
               document.getElementById("my_modal_1").showModal();
             }}
           >
@@ -224,11 +224,11 @@ const Surveillants = () => {
           </button>
         </div>
       </div>
-      <div className="session-table-container bg-white shadow-md rounded-lg overflow-hidden max-w-full mx-auto">
-        <div className="table-responsive">
-          <table className="table-auto w-full table-full-width text-sm">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr className="bg-gray-200 text-gray-700 text-base">
                 <th className="px-3 py-1">Nom Complet</th>
                 <th className="px-3 py-1">ID departement</th>
                 <th className="px-3 py-1">Action</th>

@@ -7,6 +7,8 @@ const TablettesAssociees = () => {
   const [filteredTabletteData, setFilteredTabletteData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { token } = useToken();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     fetchTablette();
@@ -56,6 +58,70 @@ const TablettesAssociees = () => {
     }
   };
 
+  const totalPages = Math.ceil(filteredTabletteData.length / itemsPerPage);
+  const currentTabletteData = filteredTabletteData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    const halfPageToShow = Math.floor(maxPagesToShow / 2);
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= halfPageToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage > totalPages - halfPageToShow) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - halfPageToShow; i <= currentPage + halfPageToShow; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) =>
+      page === "..." ? (
+        <span key={index} className="mx-1 px-3 py-1">
+          ...
+        </span>
+      ) : (
+        <button
+          key={index}
+          className={`mx-1 px-3 py-1 rounded ${
+            currentPage === page ? "bg-red-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={() => handlePageChange(page)}
+        >
+          {page}
+        </button>
+      )
+    );
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -63,7 +129,7 @@ const TablettesAssociees = () => {
         <div className="relative">
           <input
             type="text"
-            className="input bg-gray-100 border border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-red-600"
+            className="input bg-red-200 border border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-red-400"
             placeholder="Rechercher"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
@@ -93,10 +159,10 @@ const TablettesAssociees = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTabletteData.map((tablette) => (
+            {currentTabletteData.map((tablette) => (
               <tr className="border-t" key={tablette.device_id}>
                 <td className="px-4 py-2">{tablette.device_id}</td>
-                <td className="px-4 py-2">{tablette.statut}</td>
+                <td className="px-4 py-2 ">{tablette.statut}</td>
                 <td className="px-4 py-2">
                   <button
                     className="btn p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
@@ -109,6 +175,24 @@ const TablettesAssociees = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-center mt-4 mb-4">
+        <button
+          className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Précédent
+        </button>
+        {renderPagination()}
+        <button
+          className="mx-1 px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Suivant
+        </button>
       </div>
     </div>
   );

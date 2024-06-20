@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-blue-700 text-gray-100 px-6 py-4 shadow-md flex justify-between items-center">
+    <nav className="navbar bg-blue-500 text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
       <div className="flex items-center">
         <label
           htmlFor="my-drawer-2"
@@ -74,7 +74,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="flex items-center gap-6">
-        <button className="btn btn-ghost btn-circle text-gray-800 hover:text-gray-600">
+        <button className="btn btn-ghost btn-circle text-white hover:text-gray-600">
           <div className="indicator">
             <svg
               xmlns="http://www.w3.org/2000/svg"
