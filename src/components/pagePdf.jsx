@@ -11,32 +11,39 @@ function PagePdf() {
   useEffect(() => {
     const getPdf = async () => {
       try {
+        console.log("Starting PDF fetch...");
         const response = await axios.get("http://127.0.0.1:8000/api/getPdf", {
           headers: { Authorization: `Bearer ${token}` },
-          params: { "id_session": id }
+          params: { id_session: id }
         });
 
         console.log("Fetched PDF data:", response.data);
-
         if (response.data.pv) {
-          const cleanedPaths = response.data.pv.map(e => e.file_path.replace("pdfs/", ""));
+          const cleanedPaths = response.data.pv.map(path => path.replace("pdfs/", ""));
           setPdf(cleanedPaths); // Update the state with the cleaned paths
+          console.log("Updated PDF paths in state:", cleanedPaths);
         }
       } catch (error) {
-        console.error("Error fetching PDF", error);
+        console.error("Error fetching PDF data:", error);
       }
     };
 
-    getPdf(); // Execute the function to fetch PDF
+    getPdf();
   }, [id, token]); // Dependency array to re-run useEffect when `id` or `token` changes
 
+  useEffect(() => {
+    if (pdf.length > 0) {
+      console.log("PDF state updated, first element:", pdf[0]);
+    }
+  }, [pdf]);
   return (
     <div>
       <h1>PDF Files</h1>
       {pdf.length ? (
+        
         <ul>
           {pdf.map((path, index) => (
-            <li key={index}><a href={`/pdf/${path}`}>View PDF</a> </li> // Display each PDF path
+            <li key={index}><a href={`/pdf/${path}`}>View PDF </a> </li> // Display each PDF path
           ))}
         </ul>
       ) : (
