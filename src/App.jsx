@@ -31,8 +31,8 @@ export const TokenProvider = ({ children }) => {
 function App() {
   return (
     <TokenProvider>
-      <BrowserRouter>
         <Navbar />
+      <BrowserRouter>
         <Routes>
           <Route path="/authentification" element={<Authentification />} />
           <Route path="/verification" element={<Verification />} />
@@ -49,8 +49,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </TokenProvider>
-      //  <Test/>
-      //  <Pdf /> 
+       // <Test/>
+      //  <PdfViewer /> 
           
   );
 }
