@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useToken } from "../App";
 import './Etudiants.css'; // Assuming you want to reuse the same CSS
+import { Refresh } from "@mui/icons-material";
+
+
 
 const Etudiants = () => {
   const [etudiants, setEtudiants] = useState([]);
@@ -49,6 +52,11 @@ const Etudiants = () => {
         console.error("There was an error fetching the modules", error);
       });
   }, [token]);
+
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

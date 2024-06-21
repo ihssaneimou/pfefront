@@ -12,7 +12,7 @@ import Demandes from "./pages/demandes";
 import Pvs from "./pages/pvs";
 import { createContext, useContext, useState } from "react";
 import Test from "./components/Test";
-import Pdf from "./components/Testpdf";
+import PdfViewer from "./components/testpdf";
 
 
 const TokenContext = createContext();
@@ -50,7 +50,7 @@ function App() {
       </BrowserRouter>
     </TokenProvider>
        // <Test/>
-      //  <PdfViewer /> 
+       //<PdfViewer /> 
           
   );
 }

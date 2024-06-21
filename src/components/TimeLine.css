@@ -1,20 +1,19 @@
-/* TimeLine.css */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
 
 .timeline-container {
   padding: 2rem;
   width: 80%;
   font-family: 'Roboto', sans-serif;
+  margin: auto;
 }
 
 .timeline-heading {
-    margin-left: -50px; /* Ajustez cette valeur selon vos besoins */
+  margin-left: -50px; /* Adjust this value as needed */
   font-size: 2.5rem; /* 32px */
   font-weight: bold;
   color: #4a5568; /* gray-700 */
   margin-bottom: 2rem; /* 32px */
-  margin-top: -2rem; /* 32px */
+  margin-top: -2rem; /* Adjust as needed */
 }
 
 .timeline-item {
@@ -24,7 +23,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0; /* gray-200 */
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  width: 100%; /* Utilise toute la largeur */
+  width: 100%; /* Use full width */
 }
 
 .timeline-item:hover {
@@ -34,12 +33,46 @@
 }
 
 .timeline-text {
-    font-size: 1.119rem;
-    font-weight: 500;
-    line-height: 1.7;
-    color: #2d3748;
-    text-transform: none; /* Capitalize, uppercase, lowercase options */
-    letter-spacing: normal; /* Adjust letter spacing if needed */
+  font-size: 1.119rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #2d3748;
+}
+
+/* Pagination styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pagination-button:hover {
+  background: #0056b3;
+}
+
+.pagination-button:disabled {
+  background: #d6d6d6;
+  cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  padding: 10px 15px;
+}
+
+.pagination-button.active {
+  background: #0056b3;
 }
 
 /* Responsive Design */
