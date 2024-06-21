@@ -7,7 +7,7 @@ const TablettesAssociees = () => {
   const [filteredTabletteData, setFilteredTabletteData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 22;
+  const itemsPerPage = 36;
   const { token } = useToken();
 
   useEffect(() => {
