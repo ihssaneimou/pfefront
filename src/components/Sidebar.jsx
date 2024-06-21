@@ -37,6 +37,7 @@ import {
   SupervisorAccount // Nouvelle icône pour les surveillants
 } from "@mui/icons-material";
 import './Sidebar.css';
+import Navbar from "./Navbar";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -95,6 +96,8 @@ const Sidebar = () => {
   };
 
   return (
+    <div>
+    <Navbar />
     <div className="drawer lg:drawer-open overflow-auto h-clac-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content h-[100vh] p-8 bg-gray-50 text-gray-800 flex flex-col items-center  ">
@@ -196,6 +199,7 @@ const Sidebar = () => {
           </ListItemButton>
         </List>
       </div>
+    </div>
     </div>
   );
 };
