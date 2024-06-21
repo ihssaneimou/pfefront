@@ -4,6 +4,8 @@ import { useToken } from "../App";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import './HistoriqueSessions.css'; // Assurez-vous que le chemin est correct
+import PdfViewer from "./testpdf";
+import { Link } from "react-router-dom";
 
 const HistoriqueSessions = () => {
   const [pdfFile, setPdfFile] = useState('');
@@ -21,7 +23,6 @@ const HistoriqueSessions = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-
   const { token } = useToken();
 
   useEffect(() => {
@@ -139,6 +140,7 @@ const HistoriqueSessions = () => {
         pages.push(totalPages);
       }
     }
+    
 
     return pages.map((page, index) =>
       page === "..." ? (
@@ -158,7 +160,9 @@ const HistoriqueSessions = () => {
       )
     );
   };
-
+  
+    
+  
   return (
     <div className="session-container">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
@@ -217,15 +221,17 @@ const HistoriqueSessions = () => {
                   <td className="px-4 py-2">{session.datedebut}</td>
                   <td className="px-4 py-2">{session.datefin}</td>
                   <td className="px-4 py-2">
+                  <Link to={`/pagePdf/${session.id_session}`}>
                     <button className="btn btn-ghost p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
                     // onClick={() => {
-                    //   setSelectedTablette(tablette);
-                    //   setShowModal(true);
-                    // }}
-                    onClick={() => document.getElementById("my_modal_2").showModal()}
-                    >
+                      //   setSelectedTablette(tablette);
+                      //   setShowModal(true);
+                      // }}
+                      // onClick={() => getPdf(session.id_session)}
+                      >
                       Consulter
                     </button>
+                      </Link>
                   </td>
                 </tr>
               ))}

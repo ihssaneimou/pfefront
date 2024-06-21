@@ -13,6 +13,7 @@ import Pvs from "./pages/pvs";
 import { createContext, useContext, useState } from "react";
 import Test from "./components/Test";
 import PdfViewer from "./components/testpdf";
+import PagePdf from "./components/pagePdf";
 
 
 const TokenContext = createContext();
@@ -32,9 +33,8 @@ function App() {
   return (
     <TokenProvider>
       <BrowserRouter>
-        <Navbar />
         <Routes>
-          <Route path="/authentification" element={<Authentification />} />
+          <Route path="/" element={<Authentification />} />
           <Route path="/verification" element={<Verification />} />
           <Route path="/home" element={<Home />} />
           <Route path="/session" element={<Session />} />
@@ -46,11 +46,13 @@ function App() {
           <Route path="/tablettesbloquees" element={<Tablettes />} />
           <Route path="/demandesassociation" element={<Demandes />} />
           <Route path="/pvs" element={<Pvs />} />
+          <Route path="/pdf/:pdfPath" element={<PdfViewer />} />
+          <Route path="/pagePdf/:id" element={<PagePdf />} />
         </Routes>
       </BrowserRouter>
     </TokenProvider>
        // <Test/>
-       //<PdfViewer filename="pve.pdf"/> 
+        // <PdfViewer pdf='NAfJfH8UqwiUdi6uBpKRy7fNshMbHvcJzvE6GyCY' /> 
           
   );
 }
