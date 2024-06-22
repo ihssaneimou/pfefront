@@ -184,7 +184,7 @@ const Pvs = () => {
     );
 
     return (
-      <div role="tablist" className="tabs tabs-lifted">
+      <div role="tablist" className="tabs tabs-lifted overflow-auto">
         <input
           type="radio"
           name="my_tabs_2"
@@ -196,9 +196,7 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
-            activeTab === "etudiantsPresents" ? "" : "hidden"
-          }`}
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -243,7 +241,7 @@ const Pvs = () => {
                 </label>
               </div>
             </div>
-            <table className="table m-auto w-4/5">
+            <table className="table m-auto w-full">
               <thead>
                 <tr className="text-slate-700">
                   <th>Nom</th>
@@ -498,8 +496,8 @@ const Pvs = () => {
   };
 
   return (
-    <>
-      <form className="overflow-x-auto mb-4" onSubmit={handleSubmit}>
+    <div className="overflow-auto flex-1  flex-col items-center">
+      <form className="overflow-x-auto grid justify-center mb-4" onSubmit={handleSubmit}>
         <div className="w-full mb-4">
           <label
             htmlFor="dateInput"
@@ -572,7 +570,7 @@ const Pvs = () => {
         </button>
       </form>
       {showTabs && displayTabs()}
-    </>
+    </div>
   );
 };
 
