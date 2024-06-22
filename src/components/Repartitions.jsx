@@ -197,7 +197,8 @@ const Repartitions = () => {
                 </label>
               </div>
             </div>
-            <table className="table lg:w-[70vw] w-full">
+            <table className="table m-auto w-full">
+              {/* head */}
               <thead>
                 <tr className="text-slate-700">
                   <th>Nom</th>
