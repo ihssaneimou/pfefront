@@ -414,13 +414,14 @@ const Pvs = () => {
           </div>
           <div className="flex flex-row flex-wrap justify-around content-around">
             {currentRapport.map((rapport, index) => (
-              <div key={index} className="content-center">
-                <p>{rapport.titre_rapport}</p>
-                <p>{rapport.contenu}</p>
-                <p>{rapport.nom_etudiant}</p>
-              </div>
+            <div key={index} className="content-center">
+               <p className="font-bold">{rapport.nom_etudiant} {rapport.prenom_etudiant} {rapport.codeApogee}</p>
+                <p className="font-semibold">{rapport.titre_rapport}</p>
+               <p>{rapport.contenu}</p>    
+            </div>
             ))}
           </div>
+
           <Pagination
             currentPage={currentPageRapport}
             totalPages={totalPagesRapport}

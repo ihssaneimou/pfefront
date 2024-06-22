@@ -1,0 +1,104 @@
+/* LoginForm.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.login-background {
+  display: flex;
+  color: #f0f8ff;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('../assets/facc.jpeg') no-repeat center center/cover; /* Ensure the path to your background image is correct */
+}
+
+.login-container {
+  display: flex;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+}
+
+.login-logo img {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.login-form {
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form h2 {
+  color: #00A5E3;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login-input {
+  width: 100%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f0f8ff;
+  color: #333;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.login-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #00A5E3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:disabled {
+  background-color: #a0d8f1;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #008fc5;
+}
+
+.login-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #00A5E3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif; /* Specify the font family if different */
+    font-size: 18px; /* Adjust the size as needed */
+    font-weight: 500; /* Adjust weight as needed */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .login-form h2 {
+    color: #00A5E3;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'Roboto', sans-serif; /* Specify the font family if different */
+    font-size: 24px; /* Adjust the size as needed */
+    font-weight: 700; /* Make it bold */
+  }
+  
