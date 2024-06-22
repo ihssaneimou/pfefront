@@ -11,25 +11,24 @@ function PagePdf() {
   useEffect(() => {
     const getPdf = async () => {
       try {
-        console.log("Starting PDF fetch...");
-        const response = await axios.get("http://127.0.0.1:8000/api/getPdf", {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { id_session: id }
-        });
+          console.log("Starting PDF fetch...");
+          const response = await axios.get("http://127.0.0.1:8000/api/getPdf", {
+              headers: { Authorization: `Bearer ${token}` },
+              params: { id_session: id }
+          });
 
-        console.log("Fetched PDF data:", response.data);
-        if (response.data.pv) {
-          const cleanedPaths = response.data.pv.map(path => path.replace("pdfs/", ""));
-          setPdf(cleanedPaths); // Update the state with the cleaned paths
-          console.log("Updated PDF paths in state:", cleanedPaths);
-        }
+          console.log("Fetched PDF data:", response.data);
+          if (response.data.pv) {
+              setPdf(response.data.pv);
+              console.log("Updated PDF details in state:", response.data.pv);
+          }
       } catch (error) {
-        console.error("Error fetching PDF data:", error);
+          console.error("Error fetching PDF data:", error);
       }
-    };
+  };
 
-    getPdf();
-  }, [id, token]); // Dependency array to re-run useEffect when `id` or `token` changes
+  getPdf();
+}, [id, token]); 
 
   useEffect(() => {
     if (pdf.length > 0) {
@@ -43,7 +42,12 @@ function PagePdf() {
         
         <ul>
           {pdf.map((path, index) => (
-            <li key={index}><a href={`/pdf/${path}`}>View PDF </a> </li> // Display each PDF path
+            <div>
+            <p>Chemin du fichier: {path.file_path}</p>
+            <p>Date de l'examen: {path.date_examen}</p>
+            <p>Demi-journée de l'examen: {path.demi_journee_examen}</p>
+            <p>local: {path.type_local}-{path.num_local}</p>
+            <li key={index}><a href={`/pdf/${path.file_path}`}>View PDF </a> </li> </div>
           ))}
         </ul>
       ) : (
