@@ -102,10 +102,15 @@ const TimeLine = () => {
   return (
     <div className="timeline-container">
       <h1 className="timeline-heading">Chronologie des Activités</h1>
-      <ul className="space-y-3 w-full">
+      <ul className="timeline-list">
         {currentActions.map((action, index) => (
-          <li key={index} className="timeline-item w-full">
-            <p className="timeline-text w-full">{action.description}</p>
+          <li
+            key={index}
+            className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}
+          >
+            <div className="timeline-content">
+              <p className="timeline-text">{action.description}</p>
+            </div>
           </li>
         ))}
       </ul>

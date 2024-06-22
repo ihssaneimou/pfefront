@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-blue-500 text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
+    <nav className="navbar bg-[#03407e] text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
       <div className="flex items-center">
         {/* <label
           htmlFor="my-drawer-2"
@@ -94,7 +94,7 @@ const Navbar = () => {
           </div>
         </button>
         <button
-          className="btn px-6 py-3 rounded-md bg-blue-600 text-white hover:bg-red-600 focus:outline-none transition duration-200"
+          className="btn px-6 py-3 rounded-md bg-red-700 text-white hover:bg-red-600 focus:outline-none transition duration-200"
           onClick={handleLogout}
         >
           Déconnexion

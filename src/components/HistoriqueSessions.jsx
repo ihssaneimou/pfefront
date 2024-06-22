@@ -22,7 +22,7 @@ const HistoriqueSessions = () => {
   // const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
   const { token } = useToken();
 
   useEffect(() => {
@@ -173,7 +173,7 @@ const HistoriqueSessions = () => {
           <label className="input input-bordered flex bg-white items-center gap-2 shadow-sm rounded w-full max-w-md">
             <input
               type="text"
-              className="search-input grow bg-transparent p-2"
+              className="search-input grow bg-transparent p-2 mt-2"
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -194,7 +194,7 @@ const HistoriqueSessions = () => {
         </div>
         <div className="flex justify-end">
           <button
-            className="button"
+            className="button text-base "
             onClick={() => document.getElementById("my_modal_1").showModal()}
           >
             Créer session
@@ -222,7 +222,7 @@ const HistoriqueSessions = () => {
                   <td className="px-4 py-2">{session.datefin}</td>
                   <td className="px-4 py-2">
                   <Link to={`/pagePdf/${session.id_session}`}>
-                    <button className="btn btn-ghost p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none"
+                    <button className="btn btn-ghost p-2 rounded-md bg-[#3182ce] text-white hover:bg-blue-700 focus:outline-none"
                     // onClick={() => {
                       //   setSelectedTablette(tablette);
                       //   setShowModal(true);

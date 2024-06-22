@@ -1,45 +1,61 @@
-/* LoginForm.css */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .login-background {
   display: flex;
-  color: #f0f8ff;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: url('../assets/facc.jpeg') no-repeat center center/cover; /* Ensure the path to your background image is correct */
+}
+
+.banner {
+  width: 100%;
+  height: 3em;
+  background-color: #03407e;
+  padding: 1em 0;
+  text-align: center;
+}
+
+.banner img {
+  width: auto;
+  height: 3em;
 }
 
 .login-container {
   display: flex;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  min-width: 300px;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4rem;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  width: 800px; /* Increased width */
+  min-height: 600px; /* Increased height */
 }
 
 .login-logo img {
-  width: 150px;
+  width: 250px; /* Increased width */
   height: auto;
   border-radius: 8px;
+  margin-bottom: 2rem;
 }
 
 .login-form {
-  margin-left: 2rem;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
 .login-form h2 {
-  color: #00A5E3;
+  color: #03407e;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px; /* Increased size */
+  font-weight: 600;
 }
 
 .login-input {
@@ -62,11 +78,13 @@ body {
 .login-button {
   width: 100%;
   padding: 1rem;
-  background-color: #00A5E3;
+  background-color: #03407e;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -76,29 +94,5 @@ body {
 }
 
 .login-button:hover:not(:disabled) {
-  background-color: #008fc5;
+  background-color: #0961b9;
 }
-
-.login-button {
-    width: 100%;
-    padding: 1rem;
-    background-color: #00A5E3;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-family: 'Roboto', sans-serif; /* Specify the font family if different */
-    font-size: 18px; /* Adjust the size as needed */
-    font-weight: 500; /* Adjust weight as needed */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .login-form h2 {
-    color: #00A5E3;
-    text-align: center;
-    margin-bottom: 1rem;
-    font-family: 'Roboto', sans-serif; /* Specify the font family if different */
-    font-size: 24px; /* Adjust the size as needed */
-    font-weight: 700; /* Make it bold */
-  }
-  

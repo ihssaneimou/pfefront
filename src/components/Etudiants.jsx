@@ -1,10 +1,174 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useToken } from "../App";
-import './Etudiants.css'; // Assuming you want to reuse the same CSS
 import { Refresh } from "@mui/icons-material";
 
+// CSS Styles
+const styles = `
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f0f2f5;
+}
 
+.session-container {
+    width: 90%;
+    padding: 2rem;
+    background-color: #ffffff;
+    margin: 2rem auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.session-heading {
+    font-size: 2rem;
+    color: #154296;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 2px solid #154296;
+    padding-bottom: 1rem;
+}
+
+.input, .select, .button {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input {
+    border: 2px solid #3182ce;
+    background-color: #f7fafc;
+    width: 100%;
+}
+
+.input:focus {
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.3);
+    outline: none;
+}
+
+.select {
+    border: 2px solid #3182ce;
+    background-color: #f7fafc;
+    cursor: pointer;
+    width: 100%;
+}
+
+.select:focus {
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.3);
+    outline: none;
+}
+
+.button {
+    background-color: #3182ce;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #63b3ed;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.table th, .table td {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.875rem;
+}
+
+.table th {
+    background-color: #154296;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table td .avatar .mask img {
+    border-radius: 50%;
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-action .button {
+    margin-top: 1rem;
+    background-color: #154296;
+    width: auto;
+}
+
+.modal-action .button:hover {
+    background-color: #1e5aaa;
+}
+
+.modal-action .button.bg-red-500:hover {
+    background-color: #d9534f;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.pagination button {
+    margin: 0 0.25rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination .bg-blue-600 {
+    background-color: #3182ce;
+    color: white;
+}
+
+.pagination .bg-blue-600:hover {
+    background-color: #63b3ed;
+}
+`;
 
 const Etudiants = () => {
   const [etudiants, setEtudiants] = useState([]);
@@ -52,7 +216,6 @@ const Etudiants = () => {
         console.error("There was an error fetching the modules", error);
       });
   }, [token]);
-
 
   const handleRefresh = () => {
     window.location.reload();
@@ -232,6 +395,7 @@ const Etudiants = () => {
 
   return (
     <div className="session-container">
+      <style>{styles}</style>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-5">
         <div>
           <h1 className="session-heading text-xl">Liste des etudiants</h1>
@@ -305,7 +469,7 @@ const Etudiants = () => {
                   </td>
                   <td className="px-3 py-1 flex justify-center items-center gap-1">
                     <button
-                      className="btn btn-ghost text-blue-600 text-xs"
+                      className="btn btn-ghost text-blue-500 hover:bg-blue-600 text-xs"
                       onClick={() => openEditModal(etudiant)}
                     >
                       <svg
@@ -320,7 +484,7 @@ const Etudiants = () => {
                       </svg>
                     </button>
                     <button
-                      className="btn btn-ghost text-red-600 text-xs"
+                      className="btn btn-ghost text-red-500 hover:bg-red-600 text-xs"
                       onClick={() => handleDelete(etudiant.codeApogee)}
                     >
                       <svg
