@@ -98,9 +98,9 @@ const Sidebar = () => {
   return (
     <div className="min-h-screen md:min-h-1024px">
     <Navbar />
-    <div className="drawer lg:drawer-open overflow-auto h-clac-screen">
+    <div className="drawer bg-white lg:drawer-open overflow-auto h-clac-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content h-[100vh] p-8 bg-gray-50 text-gray-800 flex flex-col items-center  ">
+      <div className="drawer-content bg-white h-[100vh] p-8 bg-gray-50 text-gray-800 flex flex-col items-center  ">
         {renderContent()}
       </div>
       <div className="drawer-side bg-white shadow-md ">
