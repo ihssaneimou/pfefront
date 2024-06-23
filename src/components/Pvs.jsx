@@ -89,10 +89,13 @@ const Pvs = () => {
   const [etudiantsPS2, setEtudiantsPS2] = useState([]);
   const [etudiantsAS2, setEtudiantsAS2] = useState([]);
   const [surveillants, setSurveillants] = useState([]);
+  //const [module, setModule] = useState("");
+  const [module1, setModule1] = useState("");
+  const [module2, setModule2] = useState("");
   const [rapport, setRapport] = useState([]);
   const { token, setToken } = useToken();
 
-  const itemsPerPage = 10; // Items per page for pagination
+  const itemsPerPage = 7; // Items per page for pagination
 
   // Pagination states for each section
   const [currentPagePS1, setCurrentPagePS1] = useState(1);
@@ -144,6 +147,9 @@ const Pvs = () => {
       setEtudiantsAS2(response.data.etudiantsAS2 || []);
       setSurveillants(response.data.surveillants || []);
       setRapport(response.data.rapport || []);
+      //setModule(response.data.module || "");
+      setModule1(response.data.module1 || "");
+      setModule2(response.data.module2 || "");
       setShowTabs(true);
     } catch (error) {
       console.error("Error fetching data", error);
@@ -184,7 +190,7 @@ const Pvs = () => {
     );
 
     return (
-      <div role="tablist" className="tabs tabs-lifted">
+      <div role="tablist" className="tabs tabs-lifted overflow-auto">
         <input
           type="radio"
           name="my_tabs_2"
@@ -196,9 +202,7 @@ const Pvs = () => {
         />
         <div
           role="tabpanel"
-          className={`tab-content bg-slate-200 border-base-300 rounded-box p-6 ${
-            activeTab === "etudiantsPresents" ? "" : "hidden"
-          }`}
+          className="tab-content bg-slate-200 border-base-300 rounded-box p-6"
         >
           <div className="overflow-x-auto">
             <div className="items-center">
@@ -206,9 +210,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                    <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
                 <div className="w-full max-w-xs">
@@ -243,7 +247,7 @@ const Pvs = () => {
                 </label>
               </div>
             </div>
-            <table className="table m-auto w-4/5">
+            <table className="table m-auto w-full">
               <thead>
                 <tr className="text-slate-700">
                   <th>Nom</th>
@@ -304,9 +308,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                  <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
                 <div className="w-full max-w-xs">
@@ -399,22 +403,23 @@ const Pvs = () => {
           <div className="flex flex-row">
             <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
               <div className="card-body">
-                <p>Module :</p>
-                <p>Demi jourée :</p>
-                <p>Local :</p>
+              <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
               </div>
             </div>
           
           </div>
           <div className="flex flex-row flex-wrap justify-around content-around">
             {currentRapport.map((rapport, index) => (
-              <div key={index} className="content-center">
-                <p>{rapport.titre_rapport}</p>
-                <p>{rapport.contenu}</p>
-                <p>{rapport.nom_etudiant}</p>
-              </div>
+            <div key={index} className="content-center">
+               <p className="font-bold">{rapport.nom_etudiant} {rapport.prenom_etudiant} {rapport.codeApogee}</p>
+                <p className="font-semibold">{rapport.titre_rapport}</p>
+               <p>{rapport.contenu}</p>    
+            </div>
             ))}
           </div>
+
           <Pagination
             currentPage={currentPageRapport}
             totalPages={totalPagesRapport}
@@ -443,9 +448,9 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                    <p>Module :</p>
-                    <p>Demi jourée :</p>
-                    <p>Local :</p>
+                  <p>Module : {seance === "S1" ? module1 : module2}</p>
+                    <p>Demi jourée :{demiJournee}</p>
+                    <p>Local :{local}</p>
                   </div>
                 </div>
               </div>
@@ -498,8 +503,8 @@ const Pvs = () => {
   };
 
   return (
-    <>
-      <form className="overflow-x-auto mb-4" onSubmit={handleSubmit}>
+    <div className="overflow-auto flex-1  flex-col items-center">
+      <form className="overflow-x-auto grid justify-center mb-4" onSubmit={handleSubmit}>
         <div className="w-full mb-4">
           <label
             htmlFor="dateInput"
@@ -572,7 +577,7 @@ const Pvs = () => {
         </button>
       </form>
       {showTabs && displayTabs()}
-    </>
+    </div>
   );
 };
 

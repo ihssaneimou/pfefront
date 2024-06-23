@@ -42,9 +42,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-blue-500 text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
+    <nav className="navbar bg-[#03407e] text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
       <div className="flex items-center">
-        <label
+        {/* <label
           htmlFor="my-drawer-2"
           className="btn btn-circle swap swap-rotate drawer-button lg:hidden"
         >
@@ -67,7 +67,7 @@ const Navbar = () => {
           >
             <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
           </svg>
-        </label>
+        </label> */}
 
         <a href="/home" className="ml-4 lg:ml-16">
           <img src={logo} alt="Logo" className="w-24 lg:w-32" />
@@ -94,7 +94,7 @@ const Navbar = () => {
           </div>
         </button>
         <button
-          className="btn px-6 py-3 rounded-md bg-blue-600 text-white hover:bg-red-600 focus:outline-none transition duration-200"
+          className="btn px-6 py-3 rounded-md bg-red-700 text-white hover:bg-red-600 focus:outline-none transition duration-200"
           onClick={handleLogout}
         >
           Déconnexion

@@ -96,7 +96,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen md:min-h-1024px">
     <Navbar />
     <div className="drawer lg:drawer-open overflow-auto h-clac-screen">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />

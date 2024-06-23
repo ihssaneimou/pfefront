@@ -129,7 +129,7 @@ const TablettesAssociees = () => {
         <div className="relative">
           <input
             type="text"
-            className="input bg-red-200 border border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="input bg-white border border-gray-300 rounded-md py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-red-400"
             placeholder="Rechercher"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
