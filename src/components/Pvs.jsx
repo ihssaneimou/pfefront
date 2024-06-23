@@ -81,7 +81,7 @@ const Pvs = () => {
   const [local, setLocal] = useState("");
   const [locals, setLocals] = useState([]); // New state for storing locals
   const [demiJournee, setDemiJournee] = useState("");
-  const [seance, setSeance] = useState("");
+  const [seance, setSeance] = useState("S1");
   const [showTabs, setShowTabs] = useState(false);
   const [activeTab, setActiveTab] = useState("etudiantsPresents"); // New state for active tab
   const [etudiantsPS1, setEtudiantsPS1] = useState([]);
@@ -221,31 +221,12 @@ const Pvs = () => {
                     value={seance}
                     onChange={(e) => setSeance(e.target.value)}
                   >
-                    <option disabled value="">
-                      Seance
-                    </option>
                     <option value="S1">Seance 1</option>
                     <option value="S2">Seance 2</option>
                   </select>
                 </div>
               </div>
-              <div className="flex">
-                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                  <input type="text" className="grow" placeholder="Search" />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="w-4 h-4 opacity-70"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </label>
-              </div>
+            
             </div>
             <table className="table m-auto w-full">
               <thead>
@@ -327,23 +308,7 @@ const Pvs = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex">
-                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                  <input type="text" className="grow" placeholder="Search" />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="w-4 h-4 opacity-70"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </label>
-              </div>
+             
             </div>
             <table className="table m-auto w-4/5">
               <thead>
@@ -403,7 +368,6 @@ const Pvs = () => {
           <div className="flex flex-row">
             <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
               <div className="card-body">
-              <p>Module : {seance === "S1" ? module1 : module2}</p>
                     <p>Demi jourée :{demiJournee}</p>
                     <p>Local :{local}</p>
               </div>
@@ -448,28 +412,13 @@ const Pvs = () => {
               <div className="flex flex-row">
                 <div className="card w-96 bg-slate-100 shadow-xl mb-4 mr-40">
                   <div className="card-body">
-                  <p>Module : {seance === "S1" ? module1 : module2}</p>
+              
                     <p>Demi jourée :{demiJournee}</p>
                     <p>Local :{local}</p>
                   </div>
                 </div>
               </div>
               <div className="flex">
-                <label className="m-auto bg-gray-300 input w-1/4 input-bordered flex items-center gap-2">
-                  <input type="text" className="grow" placeholder="Search" />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="w-4 h-4 opacity-70"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </label>
               </div>
             </div>
             <table className="table m-auto w-4/5">
@@ -482,7 +431,7 @@ const Pvs = () => {
               </thead>
               <tbody>
                 {currentSurveillants.map((surveillant) => (
-                  <tr key={surveillant.id_surveillant} className="hover cursor-pointer">
+                  <tr key={surveillant.id_surveillant} className=" cursor-pointer">
                     <td>{surveillant.nomComplet_s}</td>
                     <td>{surveillant.id_departement}</td>
                     <td>{surveillant.num}</td>
