@@ -46,7 +46,6 @@ function App() {
           <Route path="/tablettesbloquees" element={<Tablettes />} />
           <Route path="/demandesassociation" element={<Demandes />} />
           <Route path="/pvs" element={<Pvs />} />
-          <Route path="/pdf/:pdfPath" element={<PdfViewer />} />
           <Route path="/pagePdf/:id" element={<PagePdf />} />
         </Routes>
       </BrowserRouter>

@@ -173,7 +173,7 @@ const HistoriqueSessions = () => {
           <label className="input input-bordered flex bg-white items-center gap-2 shadow-sm rounded w-full max-w-md">
             <input
               type="text"
-              className="search-input grow bg-transparent p-2 mt-2"
+              className="search-input grow bg-transparent p-2 "
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

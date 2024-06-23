@@ -25,10 +25,8 @@ body {
 .session-heading {
     font-size: 2rem;
     color: #154296;
-    margin-bottom: 1rem;
     text-align: center;
-    border-bottom: 2px solid #154296;
-    padding-bottom: 1rem;
+    border-bottom: 1px solid #154296;
 }
 
 .input, .select, .button {
@@ -397,10 +395,8 @@ const Etudiants = () => {
     <div className="session-container">
       <style>{styles}</style>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-5">
-        <div>
           <h1 className="session-heading text-xl">Liste des etudiants</h1>
-        </div>
-        <div>
+        
           <label className="input input-bordered flex bg-gray-300 items-center gap-2">
             <input
               type="text"
@@ -422,7 +418,7 @@ const Etudiants = () => {
               />
             </svg>
           </label>
-        </div>
+        
         <div className="flex justify-end">
           <button
             className="button text-base p-3"

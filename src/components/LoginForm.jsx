@@ -28,14 +28,16 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="login-background">
-      <div className="banner"></div>
-      <div className="login-container">
+    <div>
+
         <div className="login-logo">
           <img src={logo} alt="Logo" />
         </div>
+    <div className="login-background">
+
+      <div className="login-container">
         <div className="login-form">
-          <h2 className="login-title">S'authentifier</h2>
+          {/* <h2 className="login-title">LOGIN</h2> */}
           <form onSubmit={handleLogin}>
             <div className="flex items-center relative mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 absolute right-3">
@@ -78,7 +80,8 @@ const LoginForm = () => {
           </form>
         </div>
       </div>
-      <div className="banner"></div>
+      
+    </div>
     </div>
   );
 };

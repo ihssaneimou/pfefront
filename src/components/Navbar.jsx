@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-[#03407e] text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
+    <nav className="navbar bg-[#3182ce] text-gray-100 px-6 py-4 shadow-md flex justify-between items-center ">
       <div className="flex items-center">
         {/* <label
           htmlFor="my-drawer-2"

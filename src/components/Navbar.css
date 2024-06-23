@@ -9,7 +9,7 @@ body {
 
 /* Styles pour la barre de navigation */
 .navbar {
-    background-color: #d3d3d3; /* Gris clair */
+    /* background-color: #d3d3d3; Gris clair */
     background-image: none; /* Pas d'image de fond */
     color: #000; /* Texte noir pour assurer le contraste */
     padding: 1rem 2rem; /* Ajustez les marges si nécessaire */
